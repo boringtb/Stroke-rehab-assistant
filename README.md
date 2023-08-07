@@ -14,7 +14,7 @@ Image data which is obtained from video or webcam will be processed by pose dete
 - Prerequisites: you'll need to have [Git](https://git-scm.com/), [Node](https://nodejs.org/), and [NPM](https://www.npmjs.com/package/npm) installed and running on your machine.
 - Open terminal/powershell/command prompt then clone this repository  
     ```Bash
-    git clone git@github.com:boringtb/ai-workout-assistant.git
+    git clone https://github.com/boringtb/ai-workout-assistant.git
     cd ai-workout-assistant
     ```
 - Install dependencies
