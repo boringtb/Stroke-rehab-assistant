@@ -1,6 +1,6 @@
 {
-  "nameWorkout": ["Shabd", "Chest-press", "Eccentic-sits", "Elbow-Flexion-Extension", "Marching", "Overhead-press"],
-  "slugWorkout": ["shabd", "Chest-press", "Eccentic-sits", "Elbow-Flexion-Extension", "Marching", "Overhead-press"],
+  "nameWorkout": ["Shoulder-Abduction", "Chest-press", "Eccentic-sits", "Elbow-Flexion-Extension", "Marching", "Overhead-press"],
+  "slugWorkout": ["Shoulder-Abduction", "Chest-press", "Eccentic-sits", "Elbow-Flexion-Extension", "Marching", "Overhead-press"],
   "duration": ["1 Minutes", "3 Minutes", "5 Minutes", "7 Minutes"],
   "settingsConfig": {
     "currWorkout": "None",
