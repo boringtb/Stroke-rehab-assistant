@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <h1 class="font-bold text-2xl mt-3 mb-5">AI Workout Assistant</h1>
         <div class="relative w-full flex flex-row justify-center items-center">
           <img
-            src="./img/undraw_pilates_gpdb.svg"
+            src="./img/tb_wheelchair_workout.svg"
             alt="Ilustration of Workout"
             class="w-1/2"
           />
