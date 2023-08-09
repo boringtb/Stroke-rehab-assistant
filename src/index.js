@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let htmlChooseWO = "";
     htmlChooseWO += isSettings
       ? `
-      <div class="mb-3">What workout do you want?</div>
+      <div class="mb-3">What exercise do you want to practice?</div>
       `
       : `
       <div class="flex-1 overflow-y-auto flex flex-col items-center w-full">
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           />
           <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-white font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
         </div>
-        <div class="mt-5 mb-3">What workout do you want?</div>
+        <div class="mt-5 mb-3">What exercise do you want to practice?</div>
       `;
 
     data.nameWorkout.forEach((nameWO, idx) => {
