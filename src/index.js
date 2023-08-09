@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             alt="Ilustration of Workout"
             class="w-1/2"
           />
-          <div id="chooseHelpBtn" class="absolute top-0 right-0 bg-yellow-500 text-white font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
+          <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-white font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
         </div>
         <div class="mt-5 mb-3">What workout do you want?</div>
       `;
