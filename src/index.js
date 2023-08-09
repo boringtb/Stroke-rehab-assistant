@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `
       : `
       <div class="flex-1 overflow-y-auto flex flex-col items-center w-full">
-        <h1 class="font-bold text-2xl mt-3 mb-5">AI Workout Assistant</h1>
+        <h1 class="font-bold text-2xl mt-3 mb-5">Stroke Rehab Assistant</h1>
         <div class="relative w-full flex flex-row justify-center items-center">
           <img
             src="./img/tb_wheelchair_workout.svg"
