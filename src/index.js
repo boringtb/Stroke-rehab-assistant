@@ -3,6 +3,66 @@ import TimerHandler from "./handlers/timerHandler";
 import ScoreHandler from "./handlers/scoreHandler";
 import SettingsHandler from "./handlers/settingsHandler";
 
+import adapter from 'webrtc-adapter';
+window.adapter = adapter; // Make it globally available
+import Janus from 'janus-gateway';
+
+let janusInstance;
+let janusVideoRoomHandle;
+
+if (Janus && typeof Janus.init === 'function') {
+    console.log("Attempting to initialize Janus...");
+    Janus.init({
+        debug: "all",
+        callback: function() {
+            if (!Janus.isWebrtcSupported()) {
+                console.error("No WebRTC support...");
+                return;
+            }
+            janusInstance = new Janus({
+                server: "ws://18.190.173.191:8188/",
+                success: function() {
+                    console.log("Connected to Janus");
+
+                    janusInstance.attach({
+                        plugin: "janus.plugin.videoroom",
+                        success: function(pluginHandle) {
+                            janusVideoRoomHandle = pluginHandle;
+                            console.log("VideoRoom plugin attached");
+
+                            // Join the existing video room with room number 1234
+                            const joinRoomData = {
+                                request: "join",
+                                room: 1234,
+                                ptype: "publisher",
+                                display: "Demo User"
+                            };
+
+                            janusVideoRoomHandle.send({
+                                message: joinRoomData,
+                                success: function(joinResponse) {
+                                    console.log("Joined the video room!");
+                                }
+                            });
+                        },
+                        error: function(error) {
+                            console.error("Error attaching Video Room plugin:", error);
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.error("Janus error:", error);
+                },
+                destroyed: function() {
+                    console.log("Janus session destroyed");
+                }
+            });
+        }
+    });
+} else {
+    console.error("Janus is not initialized or the init method is missing.");
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   let webcamElem = document.getElementById("webcamBox");
   const cnvPoseElem = document.getElementById("cnvPoseBox");
@@ -851,6 +911,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     resumeBtnElem.style.display = "flex";
     restartBtnElem.style.display = "flex";
     pauseBtnElem.style.display = "none";
+
+    if (!janusVideoRoomHandle) {
+      console.error("Janus VideoRoom handle not available.");
+      return;
+    }
+
+    const unpublish = {
+        request: "unpublish"
+    };
+    janusVideoRoomHandle.send({
+        message: unpublish,
+        success: function(response) {
+            console.log("Stream paused successfully!");
+        },
+        error: function(error) {
+            console.error("Error pausing the stream:", error);
+        }
+    });
+
   });
 
   // Play or resume button for video and webcam
@@ -869,15 +948,55 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     WOTimer.resume();
     WOPose.isLoop = true;
-    webcamElem.play().then(() => {
-      if (!isWebcamSecPlay && firstPlay && !WOPose.isVideoMode) {
+
+    if (!janusVideoRoomHandle) {
+      console.error("Janus VideoRoom handle not available.");
+      return;
+  }
+
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+  .then(stream => {
+      // Display the local video stream on a video element in the webpage
+
+      webcamBox.play();
+
+      janusVideoRoomHandle.createOffer({
+          media: { audioSend: true, videoSend: true },
+          stream: stream,
+          success: function(jsep) {
+              const publish = {
+                  request: "publish",
+                  audio: true,
+                  video: true
+              };
+              janusVideoRoomHandle.send({
+                  message: publish,
+                  jsep: jsep
+              });
+          },
+          error: function(error) {
+              console.error("WebRTC error:", error);
+          }
+      });
+  })
+  .catch(error => {
+      console.error('Could not get user media', error);
+  });
+
+  janusVideoRoomHandle.onmessage = function(msg, jsep) {
+      if(jsep) {
+          janusVideoRoomHandle.handleRemoteJsep({ jsep: jsep });
+      }
+  };
+
+  if (!isWebcamSecPlay && firstPlay && !WOPose.isVideoMode) {
         console.log("It run?");
         isWebcamSecPlay = true;
         // Return to stop redraw again (first play)
         return;
       }
-      WOPose.drawPose();
-    });
+      
+  WOPose.drawPose();
   });
 
   uploadVideoBtnElem.addEventListener("change", (event) => {
@@ -993,5 +1112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     sliderCameraElem.checked = true;
     WOPose.isVideoMode = false;
     await WOPose.camHandler.start();
+
   });
+  console.log("Hello World!");
 });

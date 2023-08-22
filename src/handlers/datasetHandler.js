@@ -1,3 +1,22 @@
+export async function uploadFile(file) {
+  const formData = new FormData();
+  formData.append('file', file, file.name);
+
+  try {
+      const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+      });
+
+      if (response.ok) {
+          alert('File uploaded successfully');
+      } else {
+          alert('File upload failed');
+      }
+  } catch (error) {
+      console.error('There was an error uploading the file:', error);
+  }
+}
 export default class DatasetHandler {
   constructor() {
     this.DBKeypoints = [
@@ -45,10 +64,19 @@ export default class DatasetHandler {
   };
 
   saveToCSV = () => {
-    const csvContent = `data:text/csv;charset=utf-8,${this.DBKeypoints.map(
-      (row) => row.join(",")
-    ).join("\n")}`;
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = this.DBKeypoints.map((row) => row.join(",")).join("\n");
+    
+    // Create a Blob with the CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    // Create a File object
+    const file = new File([blob], "datasetX.csv", { type: 'text/csv' });
+    
+    // Upload the file to the server
+    this.uploadFile(file);
+
+    // Your existing code to download the CSV to user's local machine
+    const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvContent}`);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "datasetX.csv");
@@ -57,4 +85,29 @@ export default class DatasetHandler {
     this.DBKeypoints = [this.DBKeypoints[0]]; // clear
     document.body.removeChild(link);
   };
+
+  uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    try {
+        const response = await fetch('http://18.190.173.191:3000/upload', { // Assuming the backend server is running on port 3000
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('File uploaded successfully');
+        } else {
+            const text = await response.text();
+            alert('File upload failed: ' + text);
+        }
+    } catch (error) {
+        console.error('There was an error uploading the file:', error);
+    }
+  };
+
+  
+
 }
+

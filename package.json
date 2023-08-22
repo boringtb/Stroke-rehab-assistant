@@ -42,6 +42,8 @@
     "@tensorflow/tfjs-backend-webgl": "^4.2.0",
     "@tensorflow/tfjs-converter": "^4.2.0",
     "@tensorflow/tfjs-core": "^4.2.0",
-    "@tensorflow/tfjs-layers": "^4.2.0"
+    "@tensorflow/tfjs-layers": "^4.2.0",
+    "janus-gateway": "^1.2.0",
+    "webrtc-adapter": "^8.2.3"
   }
 }
