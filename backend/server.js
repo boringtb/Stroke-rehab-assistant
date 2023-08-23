@@ -10,7 +10,7 @@ app.use(cors());
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './storage/')
+        cb(null, '/home/ubuntu/rehab_videos/')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
