@@ -20,10 +20,9 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "wss://18.190.173.191:8989/",
+                server: "wss://wss.airehabs.com:8989",
                 success: function() {
                     console.log("Connected to Janus");
-
                     janusInstance.attach({
                         plugin: "janus.plugin.videoroom",
                         success: function(pluginHandle) {
