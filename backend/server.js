@@ -30,20 +30,17 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
 // Add a GET API endpoint to provide exercise data
-app.get('/get_exercise_data', (req, res) => {
-  const model = req.query.model;
-  const duration = req.query.duration;
+app.post('/api/:workoutName/:duration', (req, res) => {
+  const workoutName = req.params.workoutName;
+  const duration = req.params.duration;
 
-  // Generate or fetch data based on model and duration
-  const data = {
-    model: model,
-    duration: duration,
-    steps: ['step1', 'step2', 'step3']
-  };
+  res.status(200).json({
+    "Workout": workoutName,
+    "duration": duration
+  });
 
-  // Send the JSON data back to client
-  res.json(data);
 });
 
 // New POST endpoint for exercise selection
