@@ -62,6 +62,8 @@ if (Janus && typeof Janus.init === 'function') {
     console.error("Janus is not initialized or the init method is missing.");
 }
 
+
+
 document.addEventListener("DOMContentLoaded", async () => {
   let webcamElem = document.getElementById("webcamBox");
   const cnvPoseElem = document.getElementById("cnvPoseBox");
@@ -1115,3 +1117,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   console.log("Hello World!");
 });
+
+// Function to send a POST request to the server and get a response
+async function postExerciseSelection(workoutName, duration) {
+  const response = await fetch(`https://www.airehabs.com/api/${workoutName}/${duration}`, {
+    method: 'POST'
+  });
+  const data = await response.json();
+
+  if (response.status === 200) {
+    // Update the URL to move to the next view
+    const newURL = `${window.location.protocol}//${window.location.host}/next_view`;
+    window.history.pushState({ path: newURL }, '', newURL);
+
+    // Do additional logic here to handle the next view
+  }
+}

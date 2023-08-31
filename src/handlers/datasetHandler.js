@@ -1,22 +1,4 @@
-export async function uploadFile(file) {
-  const formData = new FormData();
-  formData.append('file', file, file.name);
 
-  try {
-      const response = await fetch('/upload', {
-          method: 'POST',
-          body: formData
-      });
-
-      if (response.ok) {
-          alert('File uploaded successfully');
-      } else {
-          alert('File upload failed');
-      }
-  } catch (error) {
-      console.error('There was an error uploading the file:', error);
-  }
-}
 export default class DatasetHandler {
   constructor() {
     this.DBKeypoints = [
@@ -72,6 +54,7 @@ export default class DatasetHandler {
     // Create a File object
     const file = new File([blob], "datasetX.csv", { type: 'text/csv' });
     
+    console.log(file);
     // Upload the file to the server
     this.uploadFile(file);
 
