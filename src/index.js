@@ -12,14 +12,15 @@ let janusVideoRoomHandle;
 
 // Function to send a POST request to the server and get a response
 async function postExerciseSelection(workoutName, duration) {
-  const response = await fetch(`https://www.airehabs.com/api/${workoutName}/${duration}`, {
+  const dur = duration.split(" ")[0];
+  const response = await fetch(`http://18.190.173.191:3000/api/${workoutName}/${dur}`, {
     method: 'POST'
   });
   const data = await response.json();
 
   if (response.status === 200) {
     // Update the URL to move to the next view
-    const newURL = `${window.location.protocol}//${window.location.host}/?work=${workoutName}/?duration=${duration}`;
+    const newURL = `${window.location.protocol}//${window.location.host}/?work=${workoutName}/?duration=${dur}`;
     window.history.pushState({ path: newURL }, '', newURL);
 
     // Do additional logic here to handle the next view
@@ -907,6 +908,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     pauseBtnElem.style.display = "none";
     imgDirectionSignElem.style.display = "none";
     adviceWrapElem.style.display = "none";
+
+    const fullURL = window.location.href;
+    const newfinishedURL = fullURL + '/workoutSuccess';
+    window.history.pushState({ path: newfinishedURL }, '', newfinishedURL);
   };
 
   // Fired when timer is finished and try to restart with OK btn
@@ -1134,4 +1139,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   });
   console.log("Hello World!");
+});
+
+
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') {
+    const fullURL = window.location.href;
+    const newleftURL = fullURL + '/closePlayer';
+    window.history.pushState({ path: newleftURL }, '', newleftURL);
+  }
 });

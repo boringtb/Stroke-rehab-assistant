@@ -1,12 +1,49 @@
 const cors = require('cors');
-
 const express = require('express');
 const multer  = require('multer');
+const bodyParser = require('body-parser');
+const uuid = require('uuid');
+
+const ExerReqHandler = require('./ExerReqHandler'); // Import the function from handleRequest.js
 
 const app = express();
 
 // Add this after initializing your app and before any routes
 app.use(cors());
+app.use(bodyParser.json());
+app.use(cookieParser());
+
+// Middleware to assign or read a unique user ID
+app.use((req, res, next) => {
+    if (!req.cookies.userId) {
+      const userId = uuid.v4(); // Generate a new UUID
+      res.cookie('userId', userId); // Store it in a cookie
+      req.userId = userId;
+    } else {
+      req.userId = req.cookies.userId;
+    }
+    next();
+  });
+
+// GET endpoint to fetch exercise summary
+app.get('/api/summary/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const summary = exerciseSummaries[userId];
+    if (summary) {
+      res.json(summary);
+    } else {
+      res.status(404).json({ message: 'Summary not found' });
+    }
+  });
+
+// POST endpoint to store exercise summary
+app.post('/api/summary', (req, res) => {
+    const userId = req.userId;
+    const summary = req.body;
+    exerciseSummaries[userId] = summary;
+    res.json({ message: 'Summary saved', userId });
+  });
+  
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -41,18 +78,4 @@ app.post('/api/:workoutName/:duration', (req, res) => {
     "duration": duration
   });
 
-});
-
-// New POST endpoint for exercise selection
-app.post('/api/:workoutName/:duration', (req, res) => {
-  const workoutName = req.params.workoutName;
-  const duration = req.params.duration;
-
-  // You can add logic here to validate the workoutName and duration
-
-  // Send a 200 OK status with a JSON response
-  res.status(200).json({
-    "Workout": workoutName,
-    "duration": duration
-  });
 });
