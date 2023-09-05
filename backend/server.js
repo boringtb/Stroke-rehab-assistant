@@ -1,8 +1,10 @@
-const cors = require('cors');
+
 const express = require('express');
 const multer  = require('multer');
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const ExerReqHandler = require('./ExerReqHandler'); // Import the function from handleRequest.js
 
@@ -64,6 +66,17 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 const PORT = 3000;
+const https = require('https');
+const fs = require('fs');
+
+const httpsOptions = {
+  key: fs.readFileSync("/etc/letsencrypt/live/wss.airehabs.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/wss.airehabs.com/fullchain.pem")
+};
+
+https.createServer(httpsOptions, app).listen(3000, () => {
+  console.log("HTTPS server running on port 3000");
+});
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

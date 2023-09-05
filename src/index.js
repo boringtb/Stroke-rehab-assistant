@@ -13,7 +13,7 @@ let janusVideoRoomHandle;
 // Function to send a POST request to the server and get a response
 async function postExerciseSelection(workoutName, duration) {
   const dur = duration.split(" ")[0];
-  const response = await fetch(`http://18.190.173.191:3000/api/${workoutName}/${dur}`, {
+  const response = await fetch(`https://18.190.173.191:3000/api/${workoutName}/${dur}`, {
     method: 'POST'
   });
   const data = await response.json();
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetch(path)
       .then((resp) => {
         if (!resp.ok) {
-          throw new Error(`HTTP error${resp.status}`);
+          throw new Error(`HTTPS error${resp.status}`);
         }
         return resp.json();
       })
@@ -780,7 +780,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetch(path)
       .then((resp) => {
         if (!resp.ok) {
-          throw new Error(`HTTP error${resp.status}`);
+          throw new Error(`HTTPS error${resp.status}`);
         }
         return resp.json();
       })
