@@ -70,15 +70,12 @@ const https = require('https');
 const fs = require('fs');
 
 const httpsOptions = {
-  key: fs.readFileSync("/etc/letsencrypt/live/wss.airehabs.com/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/wss.airehabs.com/fullchain.pem")
+  key: fs.readFileSync("/etc/letsencrypt/live/www.airehabs.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/www.airehabs.com/fullchain.pem")
 };
 
-https.createServer(httpsOptions, app).listen(3000, () => {
+https.createServer(httpsOptions, app).listen(PORT, () => {
   console.log("HTTPS server running on port 3000");
-});
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
 });
 
 // Add a GET API endpoint to provide exercise data

@@ -13,14 +13,14 @@ let janusVideoRoomHandle;
 // Function to send a POST request to the server and get a response
 async function postExerciseSelection(workoutName, duration) {
   const dur = duration.split(" ")[0];
-  const response = await fetch(`https://18.190.173.191:3000/api/${workoutName}/${dur}`, {
+  const response = await fetch(`https://www.airehabs.com:3000/api/${workoutName}/${dur}`, {
     method: 'POST'
   });
   const data = await response.json();
 
   if (response.status === 200) {
     // Update the URL to move to the next view
-    const newURL = `${window.location.protocol}//${window.location.host}/?work=${workoutName}/?duration=${dur}`;
+    const newURL = `${window.location.protocol}//${window.location.host}/player?nameWorkout=${workoutName}&duration=${dur}&videoURL=${data.videoURL}`;
     window.history.pushState({ path: newURL }, '', newURL);
 
     // Do additional logic here to handle the next view
@@ -116,14 +116,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const bodySettingsWOElem = document.getElementById("bodySettingsWOBox");
   const bodySettingsAdvElem = document.getElementById("bodySettingsAdvBox");
 
-  const scoresBtnElem = document.getElementById("scoresBtn");
-  const scoresElem = document.getElementById("scoresBox");
-  const scoresOKBtnElem = document.getElementById("scoresOKBtn");
-  const segJourneyBtnElem = document.getElementById("segJourneyBtn");
-  const segBestBtnElem = document.getElementById("segBestBtn");
-  const bodyJourneyElem = document.getElementById("bodyJourneyBox");
-  const bodyBestScoreElem = document.getElementById("bodyBestScoreBox");
-
   const helpElem = document.getElementById("helpBox");
   const helpBtnElem = document.getElementById("helpBtn");
   const segHowToUseBtnElem = document.getElementById("segHowToUseBtn");
@@ -131,6 +123,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const bodyHowToUseElem = document.getElementById("bodyHowToUseBox");
   const bodyAboutElem = document.getElementById("bodyAboutBox");
   const helpOKBtnElem = document.getElementById("helpOKBtn");
+
+  const dismissalBtnElem = document.getElementById("dismissalBtn");
+  const dismissalElem = document.getElementById("dismissalBox");
+  const dismissalOKBtnElem = document.getElementById("dismissalOKBtn");
 
   const developerModeElem = document.getElementById("developerModeBox");
   const imgDirectionSignElem = document.getElementById("imgDirectionSignBox");
@@ -323,7 +319,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         loaderElem.style.display = "none";
         accessCamElem.style.display = "none";
-        
       })
       .catch((err) => {
         console.log("Permission Denied: Webcam Access is Not Granted");
@@ -486,117 +481,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       pingRecordElem.children[0].style.display = "none";
       WOPose.DBHandler.saveToCSV();
     }
-  });
-
-  scoresBtnElem.addEventListener("click", () => {
-    // Render current journey score and best score
-    let htmlJourney = "";
-    let htmlBestScore = "";
-    const bestScore = WOScore.getBestScoreByReps();
-    Object.keys(bestScore).forEach((nameWO) => {
-      htmlBestScore += `
-        <div class="mb-3 text-gray-500 font-bold border-t-2 pt-1">
-          ${nameWO}
-        </div>
-      `;
-      Object.keys(bestScore[nameWO]).forEach((durationWO, idx) => {
-        if (idx === 0) {
-          htmlBestScore += `
-            <div class="mb-3 grid grid-cols-2 gap-3 w-full">
-          `;
-        }
-        htmlBestScore += `
-          <div
-            class="flex flex-col w-full bg-white rounded-lg overflow-hidden shadow-sm"
-          >
-            <div
-              class="p-1 bg-yellow-400 text-center font-medium text-sm text-gray-500"
-            >
-              ${durationWO}
-            </div>
-            <div class="p-1 text-center text-gray-500 font-medium text-lg">
-              ${bestScore[nameWO][durationWO]}<span class="text-xs"> Reps</span>
-            </div>
-          </div>
-        `;
-        if (idx === Object.keys(bestScore[nameWO]).length - 1) {
-          htmlBestScore += `
-            </div>
-          `;
-        }
-      });
-    });
-
-    if (WOScore.DBWOScore.length === 0) {
-      htmlJourney += `
-      <div class="flex flex-row w-full h-full justify-center items-center">
-        <div class="flex flex-col items-center">
-          <img
-            src="./img/undraw_void_-3-ggu.svg"
-            alt="Ilustration of Void"
-            class="w-1/2"
-          />
-          <div class="p-3 text-sm text-gray-600 text-center">There are no Journey Scores. Let's do Workout to change that!</div>
-        </div>
-      </div>
-      `;
-    }
-    // Sort by id (date miliseconds) to get newest score
-    const sortDBWOScore = [...WOScore.DBWOScore].sort((a, b) => b.id - a.id);
-    sortDBWOScore.forEach((data) => {
-      htmlJourney += `
-        <div
-          class="mb-3 w-full border-t-2 border-yellow-200 bg-white flex flex-row justify justify-between px-3 py-1.5"
-        >
-          <div class="flex flex-col items-start justify-between">
-            <div class="flex flex-row items-center">
-              <div class="text-md text-gray-600 font-semibold mr-2">
-                ${data.nameWorkout}
-              </div>
-              <div
-                class="text-xs px-1 py-0.5 bg-gray-200 rounded-lg text-gray-600 font-semibold"
-              >
-                ${data.duration}
-              </div>
-            </div>
-            <div class="text-xs">${data.date}</div>
-          </div>
-          <div class="flex flex-col items-center justify-between">
-            <div class="text-xl font-semibold text-gray-600">${data.repetition}</div>
-            <div class="text-xs">Reps</div>
-          </div>
-        </div>
-      `;
-    });
-    bodyJourneyElem.innerHTML = htmlJourney;
-    bodyBestScoreElem.innerHTML = htmlBestScore;
-    scoresElem.style.display = "flex";
-  });
-
-  scoresOKBtnElem.addEventListener("click", () => {
-    scoresElem.style.display = "none";
-  });
-
-  segJourneyBtnElem.addEventListener("click", () => {
-    // Show body journey element
-    if (bodyJourneyElem.style.display !== "none") return;
-    bodyBestScoreElem.style.display = "none";
-    bodyJourneyElem.style.display = "block";
-    segBestBtnElem.classList.remove("bg-amber-300", "text-gray-600");
-    segBestBtnElem.classList.add("bg-amber-200", "text-gray-400");
-    segJourneyBtnElem.classList.remove("bg-amber-200", "text-gray-400");
-    segJourneyBtnElem.classList.add("bg-amber-300", "text-gray-600");
-  });
-
-  segBestBtnElem.addEventListener("click", () => {
-    // Show body best score element
-    if (bodyBestScoreElem.style.display !== "none") return;
-    bodyJourneyElem.style.display = "none";
-    bodyBestScoreElem.style.display = "block";
-    segJourneyBtnElem.classList.remove("bg-amber-300", "text-gray-600");
-    segJourneyBtnElem.classList.add("bg-amber-200", "text-gray-400");
-    segBestBtnElem.classList.remove("bg-amber-200", "text-gray-400");
-    segBestBtnElem.classList.add("bg-amber-300", "text-gray-600");
   });
 
   segSettingsWOBtnElem.addEventListener("click", () => {
@@ -1139,13 +1023,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   });
   console.log("Hello World!");
-});
 
 
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'hidden') {
-    const fullURL = window.location.href;
-    const newleftURL = fullURL + '/closePlayer';
-    window.history.pushState({ path: newleftURL }, '', newleftURL);
-  }
+  dismissalBtnElem.addEventListener("click", () => {
+    dismissalElem.style.display = "flex";
+  });
+  
+  dismissalOKBtnElem.addEventListener("click", () => {
+    document.body.style.display = 'none';
+  });
+  
 });
+

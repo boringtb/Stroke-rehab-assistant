@@ -230,50 +230,7 @@
         </div>
       </div>
     </div>
-    <!-- Wrapper Score -->
-    <div
-      id="scoresBox"
-      class="flex flex-row justify-center h-screen items-center bg-gray-700/50 absolute w-full z-40"
-      style="display: none"
-    >
-      <div
-        class="flex flex-col items-center w-full max-h-96 h-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden text-gray-600 max-h-screen"
-      >
-        <div class="flex flex-row items-center w-full font-bold">
-          <div
-            id="segJourneyBtn"
-            class="w-1/2 text-center bg-amber-300 p-2 text-gray-600 hover:bg-amber-300 cursor-pointer hover:text-gray-600"
-          >
-            Journey
-          </div>
-          <div
-            id="segBestBtn"
-            class="w-1/2 text-center bg-amber-200 p-2 text-gray-400 hover:bg-amber-300 cursor-pointer hover:text-gray-600"
-          >
-            Best
-          </div>
-        </div>
-        <div
-          id="bodyJourneyBox"
-          class="w-full pt-3 flex-1 overflow-y-auto h-full bg-gray-100"
-        ></div>
-        <div
-          id="bodyBestScoreBox"
-          class="w-full pt-3 px-3 flex-1 overflow-y-auto h-full bg-gray-100"
-          style="display: none"
-        ></div>
-        <div
-          class="flex flex-row justify-center items-center border-t-2 py-2 w-full"
-        >
-          <div
-            id="scoresOKBtn"
-            class="bg-yellow-500 text-white py-1.5 px-3 text-xl font-bold rounded-lg hover:bg-amber-500 cursor-pointer mr-2"
-          >
-            OK
-          </div>
-        </div>
-      </div>
-    </div>
+    
     <!-- Wrapper Help -->
     <div
       id="helpBox"
@@ -379,6 +336,50 @@
         </div>
       </div>
     </div>
+
+    <!-- Wrapper Dismissal -->
+    <div
+      id="dismissalBox"
+      class="flex flex-row justify-center absolute w-full z-40"
+      style="display: none; top: 40%;"
+    >
+      <div
+        class="flex flex-col items-center w-full max-h-96 h-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden text-gray-600 max-h-screen"
+      >
+        <div class="flex flex-row items-center w-full font-bold">
+          <div
+            id="segdismissalBtn"
+            class="w-full text-center bg-amber-300 p-2 text-gray-600 hover:bg-amber-300 cursor-pointer hover:text-gray-600"
+          >
+            Close
+          </div>
+        </div>
+        <div
+          id="bodydismissalBox"
+          class="w-full p-3 flex-1 overflow-y-auto h-1/4 text-sm font-medium flex flex-col items-center text-justify text-gray-600"
+        >
+          <p class="mb-3">
+            Are you sure you want to close the window?
+          </p>
+          <div
+          class="flex flex-row justify-center items-center border-t-2 py-2 w-full"
+          >
+            <div
+                id="dismissalOKBtn"
+                class="bg-yellow-500 text-white py-1.5 px-3 text-xl font-bold rounded-lg hover:bg-amber-500 cursor-pointer mr-2"
+            >
+                Close
+            </div>
+            <div
+                id="canceldismissalBtn"
+                class="py-1.5 px-3 text-xl font-bold rounded-lg border cursor-pointer bg-gray-100 hover:bg-gray-300 text-gray-500"
+              >
+                Cancel
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
     <!-- Coming Soon -->
     <div
       class="flex flex-row bg-gray-600 w-full h-screen justify-center items-center"
@@ -480,16 +481,16 @@
                 Help
               </div>
               <div
-                id="scoresBtn"
+                id="settingsBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg mr-2"
               >
-                Scores
+                Settings
               </div>
               <div
-                id="settingsBtn"
+                id="dismissalBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg"
               >
-                Settings
+                X
               </div>
             </div>
             <div
