@@ -20,7 +20,7 @@ async function postExerciseSelection(workoutName, duration) {
 
   if (response.status === 200) {
     // Update the URL to move to the next view
-    const newURL = `${window.location.protocol}//${window.location.host}/player?nameWorkout=${workoutName}&duration=${dur}&videoURL=${data.videoURL}`;
+    const newURL = `${window.location.protocol}//${window.location.host}/player?nameWorkout=${workoutName}&duration=${dur}`;
     window.history.pushState({ path: newURL }, '', newURL);
 
     // Do additional logic here to handle the next view
@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dismissalBtnElem = document.getElementById("dismissalBtn");
   const dismissalElem = document.getElementById("dismissalBox");
   const dismissalOKBtnElem = document.getElementById("dismissalOKBtn");
+  const dismissalcancelBtnElem = document.getElementById("canceldismissalBtn");
 
   const developerModeElem = document.getElementById("developerModeBox");
   const imgDirectionSignElem = document.getElementById("imgDirectionSignBox");
@@ -1024,14 +1025,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   console.log("Hello World!");
 
-
   dismissalBtnElem.addEventListener("click", () => {
     dismissalElem.style.display = "flex";
+    const fullURL = window.location.href;
+    const leavingURL = fullURL + '/leaving';
+    window.history.pushState({ path: leavingURL }, '', leavingURL);
   });
   
   dismissalOKBtnElem.addEventListener("click", () => {
-    document.body.style.display = 'none';
+    document.body.style.display = 'none';    
+    const fullURL = window.location.href;
+    const leftURL = fullURL.slice(0, -8) + '/left';
+    window.history.pushState({ path: leftURL }, '', leftURL);
   });
-  
+
+  dismissalcancelBtnElem.addEventListener("click", () => {
+    dismissalElem.style.display = "none";    
+    const fullURL = window.location.href;
+    const cancelURL = fullURL.slice(0, -8);
+    window.history.pushState({ path: cancelURL }, '', cancelURL);
+  });
 });
+
 

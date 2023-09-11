@@ -3,6 +3,17 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
+  output: {
+    publicPath: '/',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/template.html",
