@@ -7,7 +7,8 @@ module.exports = merge(common, {
   mode: "production",
   output: {
     path: path.resolve(__dirname, "public"),
-    filename: "chunk.[chunkhash].js",
+    publicPath: '/',
+    filename: '[name].[chunkhash].bundle-prod.js',  // Output two different JS files
   },
   optimization: {
     splitChunks: {

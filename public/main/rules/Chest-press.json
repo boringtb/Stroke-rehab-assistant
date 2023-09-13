@@ -1,0 +1,33 @@
+{
+  "poseDetectorConfig": {
+    "model": "MoveNet",
+    "detectorConfig": {},
+    "estimationConfig": {}
+  },
+  "classifierConfig": {
+    "path": "./tfjs-model/Chest-press/model.json",
+    "label": ["Other", "Chest-press"]
+  },
+  "rulesCountConfig": {
+    "nameWorkout": "Chest-press",
+    "nameStage": ["Down", "Up"],
+    "pathImageStage": ["./img/iconmonstr-caret-up-circle-filled-64.png", "./img/iconmonstr-caret-down-circle-filled-64.png"],
+    "pathAudioStage": ["./audio/go-up-from-google-translate.webm", "./audio/go-down-from-google-translate.webm"],
+    "anglePoint": {
+      "5": {
+        "spouseIdx": [6, 7],
+        "rangeAngle": [
+          { "min": 70, "max": 120},
+          { "min": 150, "max": 180}
+        ]
+      },
+      "6": {
+        "spouseIdx": [5,8],
+        "rangeAngle": [
+          { "min": 70, "max": 120 },
+          { "min": 150, "max": 180 }
+        ]
+      }
+    }
+  }
+}
