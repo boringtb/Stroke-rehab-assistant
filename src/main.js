@@ -22,7 +22,7 @@ async function postExerciseSelection(workoutName, duration) {
     // Update the URL to move to the next view
     const newURL = `${window.location.protocol}//${window.location.host}/main/player?nameWorkout=${workoutName}&duration=${dur}`;
     window.history.pushState({ path: newURL }, '', newURL);
-
+    
     // Do additional logic here to handle the next view
   }
 }

@@ -90,6 +90,60 @@ app.post('/api/:workoutName/:duration', (req, res) => {
 
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-}); // This route is for handling any other unrecognized requests
+app.get('/api/homeworkouts.json', (req, res) => {
+  res.status(200).json({
+    "workouts": [
+      {
+      "name": "Shoulder-Abduction",
+      "description": "Shoulder-Abduction description two lines Shoulder-Abduction description two lines",
+      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      },
+      {
+      "name": "Chest-press",
+      "description": "Chest-press description two lines two lines Chest-press description two lines",
+      "videoURL" : null
+      },
+      {
+      "name": "Eccentic-sits",
+      "description": "Chest-press description two lines two lines Chest-press description two lines",
+      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      },
+      {
+      "name": "Elbow-Flexion-Extension",
+      "description": "Elbow-Flexion-Extension description two lines two lines Elbow-Flexion-Extension description two lines",
+      "videoURL" : null
+      },
+      {
+      "name": "Marching",
+      "description": "Marching description two lines two lines Marching description two lines",
+      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      },
+      {
+      "name": "Overhead-press",
+      "description": "Overhead-press description two lines two lines Overhead-press description two lines",
+      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      }
+      ],
+      "workoutDurations": [
+      {
+      "timeInt": 1,
+      "timeUnit": "minutes",
+      "timeUnitShort": "min"
+      },
+      {
+      "timeInt": 3,
+      "timeUnit": "minutes",
+      "timeUnitShort": "min"
+      },
+      {
+      "timeInt": 5,
+      "timeUnit": "minutes",
+      "timeUnitShort": "min"
+      },
+      {
+      "timeInt": 7,
+      "timeUnit": "minutes",
+      "timeUnitShort": "min"
+      }]
+  }); // This route is for handling any other unrecognized requests
+})
