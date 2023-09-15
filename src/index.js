@@ -20,7 +20,7 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "wss://wss.airehabs.com:8989",
+                server: "wss://wss.airehab.sbmi.uth.edu:8989",
                 success: function() {
                     console.log("Connected to Janus");
                     janusInstance.attach({

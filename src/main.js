@@ -13,7 +13,7 @@ let janusVideoRoomHandle;
 // Function to send a POST request to the server and get a response
 async function postExerciseSelection(workoutName, duration) {
   const dur = duration.split(" ")[0];
-  const response = await fetch(`https://www.airehabs.com:3000/api/${workoutName}/${dur}`, {
+  const response = await fetch(`https://airehab.sbmi.uth.edu:3000/api/${workoutName}/${dur}`, {
     method: 'POST'
   });
   const data = await response.json();
@@ -37,7 +37,7 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "wss://wss.airehabs.com:8989",
+                server: "wss://wss.airehab.sbmi.uth.edu:8989",
                 success: function() {
                     console.log("Connected to Janus");
                     janusInstance.attach({
@@ -165,8 +165,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   .start()
     .then(() => {WOSettings.change({
     isAccessCamera: true,
-      });
+      });  
   });
+  console.log("is cam working now?", WOPose.camHandler.isAccessCamera)
 
   // eslint-disable-next-line no-underscore-dangle
   WOPose.camHandler._addVideoConfig = {

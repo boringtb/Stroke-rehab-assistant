@@ -70,8 +70,8 @@ const https = require('https');
 const fs = require('fs');
 
 const httpsOptions = {
-  key: fs.readFileSync("/etc/letsencrypt/live/www.airehabs.com/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/www.airehabs.com/fullchain.pem")
+  key: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.key"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.crt")
 };
 
 https.createServer(httpsOptions, app).listen(PORT, () => {
