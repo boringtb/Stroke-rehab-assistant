@@ -129,38 +129,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   let heightRealVideo = 360;
   let widthResult = 0;
   let heightResult = 0;
-  const ratio = {
-    h: 9,
-    w: 16,
-  };
+  
+  const KNOWN_RATIOS = [
+    { h: 9, w: 16, name: "landscape" }, 
+    { h: 4, w: 3, name: "portrait" }
+  ];
 
-  const WOPose = new PoseHandler(webcamElem, cnvPoseElem);
-  const WOTimer = new TimerHandler();
-  const WOScore = new ScoreHandler();
-  const WOSettings = new SettingsHandler();
+  const getClosestAspectRatio = (width, height) => {
+    let minDifference = Infinity;
+    let closestRatio = null;
 
-  WOPose.additionalElem = {
-    fpsElem,
-    countElem,
-    adviceWrapElem,
-    confidenceElem,
-    imgDirectionSignElem,
-  };
-
-  // eslint-disable-next-line no-underscore-dangle
-  WOPose.camHandler._addVideoConfig = {
-    width: widthRealVideo,
-    height: heightRealVideo,
+    for (const ratio of KNOWN_RATIOS) {
+      const difference = Math.abs((width / height) - (ratio.w / ratio.h));
+      if (difference < minDifference) {
+        minDifference = difference;
+        closestRatio = ratio;
+      }
+    }  return closestRatio;
   };
 
   const resizeHandler = () => {
-    widthResult = window.innerWidth > 1280 ? 1280 : window.innerWidth;
-    heightResult = Math.floor(widthResult * (ratio.h / ratio.w));
+    const browserWidth = window.innerWidth;
+    const browserHeight = window.innerHeight;
+    const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
+  
+    let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
+    let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+  
     if (heightResult > window.innerHeight) {
       heightResult = window.innerHeight;
-      widthResult = Math.floor(heightResult * (ratio.w / ratio.h));
+      widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
     }
-
+  
     parentWebcamElem.setAttribute(
       "style",
       `width:${widthResult}px;height:${heightResult}px`
@@ -182,6 +182,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       h: heightResult / heightRealVideo,
     };
   };
+  
+  window.addEventListener('resize', resizeHandler);
+  resizeHandler(); // Call it once initially to set the size.
+
+  const WOPose = new PoseHandler(webcamElem, cnvPoseElem);
+  const WOTimer = new TimerHandler();
+  const WOScore = new ScoreHandler();
+  const WOSettings = new SettingsHandler();
+
+  WOPose.additionalElem = {
+    fpsElem,
+    countElem,
+    adviceWrapElem,
+    confidenceElem,
+    imgDirectionSignElem,
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  WOPose.camHandler._addVideoConfig = {
+    width: widthRealVideo,
+    height: heightRealVideo,
+  };
 
   // First run to auto adjust screen
   resizeHandler();
@@ -200,21 +222,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       `
       : `
       <div class="flex-1 overflow-y-auto flex flex-col items-center w-full">
-        <h1 class="font-bold text-2xl mt-3 mb-5">Stroke Rehab Assistant</h1>
+          <h1 class="font-bold text-2xl mt-3 mb-5">
+            Stroke Rehab Assistant
+          </h1>
         <div class="relative w-full flex flex-row justify-center items-center">
           <img
             src="./img/tb_wheelchair_workout.svg"
             alt="Ilustration of Workout"
             class="w-1/2"
           />
-          <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-white font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
+          <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-black font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
         </div>
         <div class="mt-5 mb-3">What exercise do you want to practice?</div>
       `;
 
     data.nameWorkout.forEach((nameWO, idx) => {
       if (idx === 0) {
-        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full">`;
+        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full" role="group" aria-labelledby="exercise-name">`;
       }
       htmlChooseWO += `
         <label
@@ -229,7 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             class="w-4 h-4 text-yellow-600"
             required
           />
-          <span class="w-full py-4 ml-2 text-sm font-medium text-gray-600"
+          <span class="w-full py-4 ml-2 text-sm font-medium text-black"
             >${nameWO}</span
           >
         </label>
@@ -245,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     data.duration.forEach((duration, idx) => {
       if (idx === 0) {
-        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full">`;
+        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full" role="group" aria-labelledby="exercise-duration">`;
       }
       htmlChooseWO += `
         <label
@@ -264,7 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             class="w-4 h-4 text-yellow-600"
             required
           />
-          <span class="w-full py-4 ml-2 text-sm font-medium text-gray-600"
+          <span class="w-full py-4 ml-2 text-sm font-medium text-black"
             >${duration}</span
           >
         </label>
@@ -281,7 +305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         <button
           id="submitWOBtn"
           type="submit"
-          class="w-full bg-yellow-500 text-white py-2 text-xl font-bold rounded-lg mb-2 mt-5 hover:bg-amber-500"
+          class="w-full bg-yellow-500 text-black py-2 text-xl font-bold rounded-lg mb-2 mt-5 hover:bg-amber-600"
         >
           Next
         </button>
@@ -397,20 +421,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (bodyHowToUseElem.style.display !== "none") return;
     bodyAboutElem.style.display = "none";
     bodyHowToUseElem.style.display = "flex";
-    segAboutBtnElem.classList.remove("bg-amber-300", "text-gray-600");
-    segAboutBtnElem.classList.add("bg-amber-200", "text-gray-400");
-    segHowToUseBtnElem.classList.remove("bg-amber-200", "text-gray-400");
-    segHowToUseBtnElem.classList.add("bg-amber-300", "text-gray-600");
+    segAboutBtnElem.classList.remove("bg-amber-300", "text-black");
+    segAboutBtnElem.classList.add("bg-amber-200", "text-black");
+    segHowToUseBtnElem.classList.remove("bg-amber-200", "text-black");
+    segHowToUseBtnElem.classList.add("bg-amber-300", "text-black");
   });
 
   segAboutBtnElem.addEventListener("click", () => {
     if (bodyAboutElem.style.display !== "none") return;
     bodyHowToUseElem.style.display = "none";
     bodyAboutElem.style.display = "flex";
-    segHowToUseBtnElem.classList.remove("bg-amber-300", "text-gray-600");
-    segHowToUseBtnElem.classList.add("bg-amber-200", "text-gray-400");
-    segAboutBtnElem.classList.remove("bg-amber-200", "text-gray-400");
-    segAboutBtnElem.classList.add("bg-amber-300", "text-gray-600");
+    segHowToUseBtnElem.classList.remove("bg-amber-300", "text-black");
+    segHowToUseBtnElem.classList.add("bg-amber-200", "text-black");
+    segAboutBtnElem.classList.remove("bg-amber-200", "text-black");
+    segAboutBtnElem.classList.add("bg-amber-300", "text-black");
   });
 
   restartBtnElem.addEventListener("click", () => {
@@ -475,7 +499,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const bestScore = WOScore.getBestScoreByReps();
     Object.keys(bestScore).forEach((nameWO) => {
       htmlBestScore += `
-        <div class="mb-3 text-gray-500 font-bold border-t-2 pt-1">
+        <div class="mb-3 text-black font-bold border-t-2 pt-1">
           ${nameWO}
         </div>
       `;
@@ -490,11 +514,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             class="flex flex-col w-full bg-white rounded-lg overflow-hidden shadow-sm"
           >
             <div
-              class="p-1 bg-yellow-400 text-center font-medium text-sm text-gray-500"
+              class="p-1 bg-yellow-500 text-center font-medium text-sm text-black"
             >
               ${durationWO}
             </div>
-            <div class="p-1 text-center text-gray-500 font-medium text-lg">
+            <div class="p-1 text-center text-black font-medium text-lg">
               ${bestScore[nameWO][durationWO]}<span class="text-xs"> Reps</span>
             </div>
           </div>
@@ -516,7 +540,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             alt="Ilustration of Void"
             class="w-1/2"
           />
-          <div class="p-3 text-sm text-gray-600 text-center">There are no Journey Scores. Let's do Workout to change that!</div>
+          <div class="p-3 text-sm text-black text-center">There are no Journey Scores. Let's do Workout to change that!</div>
         </div>
       </div>
       `;
@@ -530,11 +554,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         >
           <div class="flex flex-col items-start justify-between">
             <div class="flex flex-row items-center">
-              <div class="text-md text-gray-600 font-semibold mr-2">
+              <div class="text-md text-black font-semibold mr-2">
                 ${data.nameWorkout}
               </div>
               <div
-                class="text-xs px-1 py-0.5 bg-gray-200 rounded-lg text-gray-600 font-semibold"
+                class="text-xs px-1 py-0.5 bg-gray-200 rounded-lg text-black font-semibold"
               >
                 ${data.duration}
               </div>
@@ -542,7 +566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="text-xs">${data.date}</div>
           </div>
           <div class="flex flex-col items-center justify-between">
-            <div class="text-xl font-semibold text-gray-600">${data.repetition}</div>
+            <div class="text-xl font-semibold text-black">${data.repetition}</div>
             <div class="text-xs">Reps</div>
           </div>
         </div>

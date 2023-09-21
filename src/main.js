@@ -717,7 +717,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   .then(stream => {
       // Display the local video stream on a video element in the webpage
 
-      webcamBox.play();
+      /* webcamBox.play(); */
 
       janusVideoRoomHandle.createOffer({
           media: { audioSend: true, videoSend: true },

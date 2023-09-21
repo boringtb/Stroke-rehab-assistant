@@ -50,6 +50,8 @@
     "express": "^4.18.2",
     "janus-gateway": "^1.2.0",
     "multer": "^1.4.5-lts.1",
+    "react": "^18.2.0",
+    "react-native-camera": "^4.2.1",
     "uuid": "^9.0.0",
     "webrtc-adapter": "^8.2.3"
   }

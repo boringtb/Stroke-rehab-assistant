@@ -90,18 +90,18 @@ app.post('/api/:workoutName/:duration', (req, res) => {
 
 });
 
-app.get('/api/homeworkouts.json', (req, res) => {
+app.get('/api/homeworkouts', (req, res) => {
   res.status(200).json({
     "workouts": [
       {
       "name": "Shoulder-Abduction",
       "description": "Shoulder-Abduction description two lines Shoulder-Abduction description two lines",
-      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      "videoURL" : null
       },
       {
       "name": "Chest-press",
       "description": "Chest-press description two lines two lines Chest-press description two lines",
-      "videoURL" : null
+      "videoURL" : "https://airehab.sbmi.uth.edu/api/example_videos/Chest-press.mp4"
       },
       {
       "name": "Eccentic-sits",
@@ -146,4 +146,11 @@ app.get('/api/homeworkouts.json', (req, res) => {
       "timeUnitShort": "min"
       }]
   }); // This route is for handling any other unrecognized requests
+})
+
+app.post('/api/example_videos/:exercise_name', (req, res) => {
+  const exerciseName = req.params.exercise_name;
+  const videoPath = `/var/www/html/example_videos/${exerciseName}.mp4`;  // Use backticks for string interpolation
+
+  res.sendFile(videoPath);
 })
