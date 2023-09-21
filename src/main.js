@@ -194,22 +194,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const browserWidth = window.innerWidth;
     const browserHeight = window.innerHeight;
 
-    if (browserWidth > widthRealVideo) {
-      widthRealVideo = browserWidth;
-      heightRealVideo = browserHeight;
-      WOPose.camHandler._addVideoConfig = {
-        width: widthRealVideo,
-        height: heightRealVideo,
-      };
-    }
-
     const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
   
     let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
     let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
     if (heightResult > window.innerHeight) {
       heightResult = window.innerHeight;
-      widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+      widthResult = Math.floor(heightResult * (widthRealVideo / heightRealVideo));
     }
 
     parentWebcamElem.setAttribute(
