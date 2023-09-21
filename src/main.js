@@ -143,9 +143,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   let heightRealVideo = 360;
   let widthResult = 0;
   let heightResult = 0;
-  const ratio = {
-    h: 9,
-    w: 16,
+  const KNOWN_RATIOS = [
+    { h: 9, w: 16, name: "landscape" }, 
+    { h: 4, w: 3, name: "portrait" }
+  ];
+
+  const getClosestAspectRatio = (width, height) => {
+    let minDifference = Infinity;
+    let closestRatio = null;
+
+    for (const ratio of KNOWN_RATIOS) {
+      const difference = Math.abs((width / height) - (ratio.w / ratio.h));
+      if (difference < minDifference) {
+        minDifference = difference;
+        closestRatio = ratio;
+      }
+    }  return closestRatio;
   };
 
   const WOPose = new PoseHandler(webcamElem, cnvPoseElem);
@@ -171,18 +184,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // eslint-disable-next-line no-underscore-dangle
   WOPose.camHandler._addVideoConfig = {
-    width: widthRealVideo,
-    height: heightRealVideo,
+    width: widthResult / widthRealVideo,
+    height: heightResult / heightRealVideo,
   };
 
   const resizeHandler = () => {
-    widthResult = window.innerWidth > 1280 ? 1280 : window.innerWidth;
-    heightResult = Math.floor(widthResult * (ratio.h / ratio.w));
+    const browserWidth = window.innerWidth;
+    const browserHeight = window.innerHeight;
+    const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
+  
+    let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
+    let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+  
     if (heightResult > window.innerHeight) {
       heightResult = window.innerHeight;
-      widthResult = Math.floor(heightResult * (ratio.w / ratio.h));
+      widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
     }
-
+  
     parentWebcamElem.setAttribute(
       "style",
       `width:${widthResult}px;height:${heightResult}px`

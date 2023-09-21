@@ -129,38 +129,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   let heightRealVideo = 360;
   let widthResult = 0;
   let heightResult = 0;
-  
-  const KNOWN_RATIOS = [
-    { h: 9, w: 16, name: "landscape" }, 
-    { h: 4, w: 3, name: "portrait" }
-  ];
+  const ratio = {
+    h: 9,
+    w: 16,
+  };
 
-  const getClosestAspectRatio = (width, height) => {
-    let minDifference = Infinity;
-    let closestRatio = null;
+  const WOPose = new PoseHandler(webcamElem, cnvPoseElem);
+  const WOTimer = new TimerHandler();
+  const WOScore = new ScoreHandler();
+  const WOSettings = new SettingsHandler();
 
-    for (const ratio of KNOWN_RATIOS) {
-      const difference = Math.abs((width / height) - (ratio.w / ratio.h));
-      if (difference < minDifference) {
-        minDifference = difference;
-        closestRatio = ratio;
-      }
-    }  return closestRatio;
+  WOPose.additionalElem = {
+    fpsElem,
+    countElem,
+    adviceWrapElem,
+    confidenceElem,
+    imgDirectionSignElem,
+  };
+
+  // eslint-disable-next-line no-underscore-dangle
+  WOPose.camHandler._addVideoConfig = {
+    width: widthRealVideo,
+    height: heightRealVideo,
   };
 
   const resizeHandler = () => {
-    const browserWidth = window.innerWidth;
-    const browserHeight = window.innerHeight;
-    const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
-  
-    let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
-    let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
-  
+    widthResult = window.innerWidth > 1280 ? 1280 : window.innerWidth;
+    heightResult = Math.floor(widthResult * (ratio.h / ratio.w));
     if (heightResult > window.innerHeight) {
       heightResult = window.innerHeight;
-      widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+      widthResult = Math.floor(heightResult * (ratio.w / ratio.h));
     }
-  
+
     parentWebcamElem.setAttribute(
       "style",
       `width:${widthResult}px;height:${heightResult}px`
@@ -181,28 +181,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       w: widthResult / widthRealVideo,
       h: heightResult / heightRealVideo,
     };
-  };
-  
-  window.addEventListener('resize', resizeHandler);
-  resizeHandler(); // Call it once initially to set the size.
-
-  const WOPose = new PoseHandler(webcamElem, cnvPoseElem);
-  const WOTimer = new TimerHandler();
-  const WOScore = new ScoreHandler();
-  const WOSettings = new SettingsHandler();
-
-  WOPose.additionalElem = {
-    fpsElem,
-    countElem,
-    adviceWrapElem,
-    confidenceElem,
-    imgDirectionSignElem,
-  };
-
-  // eslint-disable-next-line no-underscore-dangle
-  WOPose.camHandler._addVideoConfig = {
-    width: widthRealVideo,
-    height: heightRealVideo,
   };
 
   // First run to auto adjust screen
