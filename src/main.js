@@ -144,8 +144,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   let widthResult = 0;
   let heightResult = 0;
   const KNOWN_RATIOS = [
-    { h: 9, w: 16, name: "landscape" }, 
-    { h: 4, w: 3, name: "portrait" }
+    { h: 9, w: 16, name: "landscape" },  //Phone rate
+    { h: 4, w: 3, name: "portrait" }, //ipad rate
+    { h: 23, w: 16, name: "young"}, //ipad-air rate
+    { h: 19.5, w:9, name: "pro"}, //ipad-pro rate
   ];
 
   const getClosestAspectRatio = (width, height) => {
@@ -184,10 +186,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // eslint-disable-next-line no-underscore-dangle
   WOPose.camHandler._addVideoConfig = {
-    width: widthResult / widthRealVideo,
-    height: heightResult / heightRealVideo,
+    width: widthRealVideo,
+    height: widthRealVideo,
   };
-
+ 
   const resizeHandler = () => {
     const browserWidth = window.innerWidth;
     const browserHeight = window.innerHeight;
