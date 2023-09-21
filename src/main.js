@@ -195,12 +195,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const browserHeight = window.innerHeight;
 
     const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
-  
-    let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
-    let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
-    if (heightResult > window.innerHeight) {
-      heightResult = window.innerHeight;
-      widthResult = Math.floor(heightResult * (widthRealVideo / heightRealVideo));
+    if (closestRatio.w / closestRatio.h > (16 / 9)) {
+      let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
+      let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+    }
+    else {
+      let heightResult = browserHeight > 720 ? 720 : browserHeight;
+      let widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
     }
 
     parentWebcamElem.setAttribute(
