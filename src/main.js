@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // eslint-disable-next-line no-underscore-dangle
   WOPose.camHandler._addVideoConfig = {
     width: widthRealVideo,
-    height: widthRealVideo,
+    height: heightRealVideo,
   };
  
   const resizeHandler = () => {
@@ -197,12 +197,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   
     let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
     let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
-  
     if (heightResult > window.innerHeight) {
       heightResult = window.innerHeight;
       widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
     }
-  
+
     parentWebcamElem.setAttribute(
       "style",
       `width:${widthResult}px;height:${heightResult}px`
