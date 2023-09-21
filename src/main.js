@@ -193,6 +193,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resizeHandler = () => {
     const browserWidth = window.innerWidth;
     const browserHeight = window.innerHeight;
+
+    if (browserWidth > widthRealVideo) {
+      widthRealVideo = browserWidth;
+      heightRealVideo = browserHeight;
+      WOPose.camHandler._addVideoConfig = {
+        width: widthRealVideo,
+        height: heightRealVideo,
+      };
+    }
+
     const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
   
     let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
