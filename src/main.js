@@ -207,6 +207,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         heightResult = browserHeight > 720 ? 720 : browserHeight;
         widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
       }
+      WOPose.scaler = {
+        w: widthResult / widthRealVideo,
+        h: heightResult / heightRealVideo,
+      };
     }
     else {
       if (browserHeight / browserWidth < 16 / 9) {
@@ -217,6 +221,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         widthResult = browserWidth > 720 ? 720 : browserWidth;
         heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
       }
+      WOPose.scaler = {
+        w: widthResult / heightRealVideo,
+        h: heightResult / widthRealVideo,
+      };
     }
 
     parentWebcamElem.setAttribute(
@@ -235,10 +243,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    WOPose.scaler = {
-      w: widthResult / widthRealVideo,
-      h: heightResult / heightRealVideo,
-    };
   };
 
   // First run to auto adjust screen
