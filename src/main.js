@@ -147,7 +147,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     { h: 9, w: 16, name: "landscape" },  //Phone rate
     { h: 4, w: 3, name: "portrait" }, //ipad rate
     { h: 23, w: 16, name: "young"}, //ipad-air rate
-    { h: 19.5, w:9, name: "pro"}, //ipad-pro rate
+    { h: 19.5, w: 9, name: "pro"}, //ipad-pro rate
+    { h: 3, w: 4, name: "air-hor"}, //ipad-air-hor rate
   ];
 
   const getClosestAspectRatio = (width, height) => {
@@ -193,15 +194,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resizeHandler = () => {
     const browserWidth = window.innerWidth;
     const browserHeight = window.innerHeight;
-
+    const widthResult = 0;
+    const heightResult = 0;
     const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
-    if (closestRatio.w / closestRatio.h > (16 / 9)) {
-      let widthResult = browserWidth > 1280 ? 1280 : browserWidth;
-      let heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+
+    if (browserWidth > browserHeight) {
+      if (browserWidth / browserHeight < 16 / 9) {
+        widthResult = browserWidth > 1280 ? 1280 : browserWidth;
+        heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+      }
+      else {
+        heightResult = browserHeight > 720 ? 720 : browserHeight;
+        widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+      }
     }
     else {
-      let heightResult = browserHeight > 720 ? 720 : browserHeight;
-      let widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+      if (browserHeight / browserWidth < 16 / 9) {
+        heightResult = browserHeight > 1280 ? 1280 : browserHeight;
+        widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+      }
+      else {
+        widthResult = browserWidth > 720 ? 720 : browserWidth;
+        heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+      }
     }
 
     parentWebcamElem.setAttribute(
