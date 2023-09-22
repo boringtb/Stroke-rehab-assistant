@@ -194,18 +194,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resizeHandler = () => {
     const browserWidth = window.innerWidth;
     const browserHeight = window.innerHeight;
-    const widthResult = 0;
-    const heightResult = 0;
+    let widthResult = 0;
+    let heightResult = 0;
     const closestRatio = getClosestAspectRatio(browserWidth, browserHeight);
 
     if (browserWidth > browserHeight) {
       if (browserWidth / browserHeight < 16 / 9) {
         widthResult = browserWidth > 1280 ? 1280 : browserWidth;
-        heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+        heightResult = Math.floor(widthResult * (9 / 16));
       }
       else {
         heightResult = browserHeight > 720 ? 720 : browserHeight;
-        widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+        widthResult = Math.floor(heightResult * (16 / 9));
       }
       WOPose.scaler = {
         w: widthResult / widthRealVideo,
@@ -215,11 +215,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     else {
       if (browserHeight / browserWidth < 16 / 9) {
         heightResult = browserHeight > 1280 ? 1280 : browserHeight;
-        widthResult = Math.floor(heightResult * (closestRatio.w / closestRatio.h));
+        widthResult = Math.floor(heightResult * (9 / 16));
       }
       else {
         widthResult = browserWidth > 720 ? 720 : browserWidth;
-        heightResult = Math.floor(widthResult * (closestRatio.h / closestRatio.w));
+        heightResult = Math.floor(widthResult * (16 / 9));
       }
       WOPose.scaler = {
         w: widthResult / heightRealVideo,
