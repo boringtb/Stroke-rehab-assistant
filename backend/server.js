@@ -74,7 +74,18 @@ app.post('/api/summary', (req, res) => {
         res.json({ message: 'Summary saved', serialNumber, summary});
       });
   });
-  
+
+app.post('/api/jsonjump', (req, res) => {
+  const nameWorkout = req.body.nameWorkout;
+  const duration = req.body.duration;
+  const newURL = `/main/player?nameWorkout=${encodeURIComponent(nameWorkout)}&duration=${duration}`;
+  res.redirect(newURL);
+});
+
+app.get('/main/player', (req, res) => {
+    res.sendFile('/var/www/html/public/main.html');
+});
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
