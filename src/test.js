@@ -177,14 +177,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     imgDirectionSignElem,
   };
 
-  await WOPose.camHandler
-  .start()
-    .then(() => {WOSettings.change({
-    isAccessCamera: true,
-      });
-  });
-  console.log("is cam working now?", WOPose.camHandler.isAccessCamera)
-
   // eslint-disable-next-line no-underscore-dangle
   WOPose.camHandler._addVideoConfig = {
     width: widthRealVideo,
@@ -274,6 +266,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         // alert("Webcam Access is Not Granted, Try to Refresh Page");
       });
   };
+
+  accessCamBtnElem.addEventListener("click", async () => {
+    await getAccessCam();
+  });
 
   // Update and show current time
   const setCurrTime = () => {

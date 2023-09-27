@@ -83,47 +83,10 @@
       top: 0;
     }
   </style>
-  <link href="/static/common.css" rel="stylesheet" >
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
   </head>
   <body><a class="skip-link" href="#main-content">Skip to main content</a>
-
-    <!-- global navigation bar-->
-    <div id="header"><div id="utilityNav">
-      <div class="grid-container clearfix">
-          <div class="grid-x float-right">
-              <nav id="nav" aria-label="Main menu">
-                  <ul class="toptier">
-                      <li class="active">
-                          <span style="font-size: calc(3pt + 100%); color: rgb(255, 255, 255);">MOBILE HEALTH</span> <a href="https://www.uth.edu/stroke-institute/" style="color: rgb(255, 255, 255);">UTHEALTH Institute for Stroke and Cerebrovascular Diseases  <i class="fi-home"></i></a>
-                      </li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/about/">About UTHealth</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/careers/">Careers</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/news/">News</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/calendar/">Events</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/index/a2z.htm">A-Z</a></li>
-                  </ul>
-              </nav>
-          </div>
-      </div>
-  </div>
-  <header class="container" style="max-width: 1140px;">
-      <nav role="heading" aria-level="1" class="navbar navbar-expand-lg navbar-light bg-white">
-          <div class="container-fluid">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#actualNavbar" aria-controls="actualNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="actualNavbar">
-                  <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                      <li class="nav-item">
-                          <a class="nav-link fw-500" aria-current="page" href="/survey/" style="color: #000000;">English</a>
-                      </li>
-                  </ul>
-              </div>
-            </div>
-       </nav>
-  </header>
   
     <!-- Wrapper Choose Workout -->
     <h2
@@ -139,35 +102,36 @@
 
     <!-- Wrapper Allow Camera -->
     <h2
-      id="accessCamBox"
-      class="flex flex-row justify-center h-screen items-center w-full z-40 bg-gray-700 absolute inset-0 overflow-hidden max-h-screen"
-      style="display: none"
+    id="accessCamBox"
+    class="flex flex-row justify-center h-screen items-center w-full z-40 bg-gray-700 absolute inset-0 overflow-hidden max-h-screen"
+    style="display: none"
+    >
+    <div
+      class="flex flex-col items-center max-w-sm w-full bg-white max-h-96 h-full shadow-md p-3 rounded-lg text-gray-500"
     >
       <div
-        class="flex flex-col items-center max-w-sm w-full bg-white max-h-96 h-full shadow-md p-3 rounded-lg text-gray-500"
+        class="flex-1 flex flex-col overflow-y-auto h-full items-center w-full"
       >
-        <div
-          class="flex-1 flex flex-col overflow-y-auto h-full items-center w-full"
-        >
-          <h3 class="font-bold text-2xl my-3">Allow Camera Access</h3>
-          <img
-            src="./img/undraw_taking_selfie_re_wlgd.svg"
-            alt="Ilustration of Workout"
-            class="w-1/2 mb-3"
-          />
-          <p class="text-center text-sm px-5">
-            Please provide us access to your camera, which is required for Pose
-            Detector
-          </p>
-        </div>
-        <div
-          id="accessCamBtn"
-          class="w-full bg-yellow-500 text-black py-2 text-xl font-bold rounded-lg mb-2 mt-5 hover:bg-amber-700 text-center cursor-pointer"
-        >
-          Grant Permission
-        </div>
+        <h3 class="font-bold text-2xl my-3">Allow Camera Access</h3>
+        <img
+          src="./img/undraw_taking_selfie_re_wlgd.svg"
+          alt="Ilustration of Workout"
+          class="w-1/2 mb-3"
+        />
+        <p class="text-center text-sm px-5">
+          Please provide us access to your camera, which is required for Pose
+          Detector
+        </p>
       </div>
+      <div
+        id="accessCamBtn"
+        class="w-full bg-yellow-500 text-black py-2 text-xl font-bold rounded-lg mb-2 mt-5 hover:bg-amber-700 text-center cursor-pointer"
+      >
+        Grant Permission
+      </div>
+    </div>
     </h2>
+
 
     <!-- Wrapper Loader -->
     <div
@@ -209,7 +173,7 @@
           style="display: none"
         >
           <div class="mb-3 w-full flex flex-row justify-between items-center">
-            <label for="audioEffectBox">Audio Effect</label>
+            <div>Audio Effect</div>
             <div>
               <label class="switch">
                 <input
@@ -223,7 +187,7 @@
             </div>
           </div>
           <div class="mb-3 w-full flex flex-row justify-between items-center">
-            <label for="fullscreenBox">Full Screen</label>
+            <div>Full Screen</div>
             <div>
               <label class="switch">
                 <input
@@ -236,7 +200,7 @@
             </div>
           </div>
           <div class="mb-3 w-full flex flex-row justify-between items-center">
-            <label for="flipCameraBox">Flip Camera</label>
+            <div>Flip Camera</div>
             <div>
               <label class="switch">
                 <input
@@ -249,7 +213,7 @@
             </div>
           </div>
           <div class="mb-3 w-full flex flex-row justify-between items-center">
-            <label for="directSignBox">Direction Sign</label>
+            <div>Direction Sign</div>
             <div>
               <label class="switch">
                 <input
@@ -263,7 +227,7 @@
             </div>
           </div>
           <div class="mb-3 w-full flex flex-row justify-between items-center">
-            <label for="devModeBox">Developer Mode</label>
+            <div>Developer Mode</div>
             <div>
               <label class="switch">
                 <input type="checkbox" id="devModeBox" name="settingsDMBox" />
@@ -291,54 +255,7 @@
         </div>
       </div>
     </div>
-
-       <!-- Wrapper Score -->
-       <div
-       id="scoresBox"
-       class="flex flex-row justify-center h-screen items-center bg-gray-700/50 absolute w-full z-40"
-       style="display: none"
-     >
-       <div
-         class="flex flex-col items-center w-full max-h-96 h-full max-w-xs bg-white rounded-lg shadow-md overflow-hidden text-gray-600 max-h-screen"
-       >
-         <div class="flex flex-row items-center w-full font-bold">
-           <div
-             id="segJourneyBtn"
-             class="w-1/2 text-center bg-amber-300 p-2 text-black hover:bg-amber-300 cursor-pointer hover:text-black"
-           >
-             Journey
-           </div>
-           <div
-             id="segBestBtn"
-             class="w-1/2 text-center bg-amber-200 p-2 text-gray-600 hover:bg-amber-300 cursor-pointer hover:text-black"
-           >
-             Best
-           </div>
-         </div>
-         <div
-           id="bodyJourneyBox"
-           class="w-full pt-3 flex-1 overflow-y-auto h-full bg-gray-100"
-           tabindex="0"
-         ></div>
-         <div
-           id="bodyBestScoreBox"
-           class="w-full pt-3 px-3 flex-1 overflow-y-auto h-full bg-gray-100"
-           tabindex="0"
-           style="display: none"
-         ></div>
-         <div
-           class="flex flex-row justify-center items-center border-t-2 py-2 w-full"
-         >
-           <div
-             id="scoresOKBtn"
-             class="bg-yellow-500 text-black py-1.5 px-3 text-xl font-bold rounded-lg hover:bg-amber-500 cursor-pointer mr-2"
-           >
-             OK
-           </div>
-         </div>
-       </div>
-     </div>
-
+    
     <!-- Wrapper Help -->
     <div
       id="helpBox"
@@ -494,7 +411,7 @@
     <div
       class="flex flex-row bg-gray-600 w-full h-screen justify-center items-center"
     >
-      <div
+      <h1
         id="parentWebcamBox"
         class="w-full bg-blue-200 rounded-lg shadow-2xl relative overflow-hidden"
         style="max-width: 1960px; max-height: 1080px"
@@ -591,16 +508,16 @@
                 Help
               </div>
               <div
-                id="scoresBtn"
+                id="settingsBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg mr-2"
               >
-                Scores
+                Settings
               </div>
               <div
-                id="settingsBtn"
+                id="dismissalBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg"
               >
-                Settings
+                X
               </div>
             </div>
             <div
@@ -749,7 +666,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </h2>
     </div>
   </body>
 </html>

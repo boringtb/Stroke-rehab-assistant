@@ -5,10 +5,21 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-
-const ExerReqHandler = require('./ExerReqHandler'); // Import the function from handleRequest.js
-
 const app = express();
+
+const PORT = 3000;
+const https = require('https');
+const fs = require('fs');
+
+const httpsOptions = {
+  key: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.key"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.crt")
+};
+
+https.createServer(httpsOptions, app).listen(PORT, () => {
+  console.log("HTTPS server running on port 3000");
+});
+
 
 // Add this after initializing your app and before any routes
 app.use(cors());
@@ -38,12 +49,30 @@ app.get('/api/summary/:userId', (req, res) => {
     }
   });
 
+  function generateUniqueSerial() {
+    const timestamp = new Date().getTime();
+    const randomNum = Math.floor(Math.random() * 1000);
+    return `${timestamp}-${randomNum}`;
+  }
+  
+
 // POST endpoint to store exercise summary
 app.post('/api/summary', (req, res) => {
-    const userId = req.userId;
     const summary = req.body;
-    exerciseSummaries[userId] = summary;
-    res.json({ message: 'Summary saved', userId });
+    // Generate a unique serial number
+    const serialNumber = generateUniqueSerial();
+
+    // Insert the summary and serial number into the SQLite database
+    const insertSQL = `INSERT INTO records (serial, summary) VALUES (?, ?)`;
+    db.run(insertSQL, [serialNumber, JSON.stringify(summary)], function(err) {
+        if (err) {
+            console.error("Error storing summary in database:", err);
+            return res.status(500).json({ message: 'Error storing summary' });
+        }
+        
+        // Send back the serial number in the response
+        res.json({ message: 'Summary saved', serialNumber, summary});
+      });
   });
   
 
@@ -65,19 +94,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).send('File uploaded successfully');
 });
 
-const PORT = 3000;
-const https = require('https');
-const fs = require('fs');
-
-const httpsOptions = {
-  key: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.key"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.crt")
-};
-
-https.createServer(httpsOptions, app).listen(PORT, () => {
-  console.log("HTTPS server running on port 3000");
-});
-
 // Add a GET API endpoint to provide exercise data
 app.post('/api/:workoutName/:duration', (req, res) => {
   const workoutName = req.params.workoutName;
@@ -90,6 +106,7 @@ app.post('/api/:workoutName/:duration', (req, res) => {
 
 });
 
+//Overall exercise summary from backend
 app.get('/api/homeworkouts', (req, res) => {
   res.status(200).json({
     "workouts": [
