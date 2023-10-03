@@ -5,7 +5,7 @@
     "estimationConfig": {}
   },
   "classifierConfig": {
-    "path": "./tfjs-model/shabd/model.json",
+    "path": "./tfjs-model/Shoulder-Abduction/model.json",
     "label": ["Other", "Shabd"]
   },
   "rulesCountConfig": {

@@ -78,11 +78,11 @@ app.post('/api/summary', (req, res) => {
 app.post('/api/jsonjump', (req, res) => {
   const nameWorkout = req.body.nameWorkout;
   const duration = req.body.duration;
-  const newURL = `/main/player?nameWorkout=${encodeURIComponent(nameWorkout)}&duration=${duration}`;
+  const newURL = `https://www.airehabs.com/main/player?nameWorkout=${nameWorkout}&duration=${duration}`;
   res.redirect(newURL);
 });
 
-app.get('/main/player', (req, res) => {
+app.get('/main/player*', (req, res) => {
     res.sendFile('/var/www/html/public/main.html');
 });
 
@@ -134,7 +134,7 @@ app.get('/api/homeworkouts', (req, res) => {
       {
       "name": "Eccentic-sits",
       "description": "Chest-press description two lines two lines Chest-press description two lines",
-      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
+      "videoURL" : "https://airehab.sbmi.uth.edu/api/example_videos/Eccentic-Sits.mp4"
       },
       {
       "name": "Elbow-Flexion-Extension",
@@ -180,5 +180,22 @@ app.post('/api/example_videos/:exercise_name', (req, res) => {
   const exerciseName = req.params.exercise_name;
   const videoPath = `/var/www/html/example_videos/${exerciseName}.mp4`;  // Use backticks for string interpolation
 
+  // Set CORS headers
+  res.header('Access-Control-Allow-Origin', '*');  // Allow all origins (consider using a specific domain for better security)
+  res.header('Access-Control-Allow-Methods', 'POST');  // Allow only POST method for this route
+  res.header('Access-Control-Allow-Headers', 'Content-Type');  // Allow Content-Type header (optional, but can be useful)
+  
   res.sendFile(videoPath);
 })
+
+app.get('/api/example_videos/:exercise_name', (req, res) => {
+  const exerciseName = req.params.exercise_name;
+  const videoPath = `/var/www/html/example_videos/${exerciseName}.mp4`;  // Use backticks for string interpolation
+
+  // Set CORS headers
+  res.header('Access-Control-Allow-Origin', '*');  // Allow all origins (consider using a specific domain for better security)
+  res.header('Access-Control-Allow-Methods', 'GET');  // Allow only GET method for this route
+  res.header('Access-Control-Allow-Headers', 'Content-Type');  // Allow Content-Type header (optional, but can be useful)
+  
+  res.sendFile(videoPath);
+});

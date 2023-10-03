@@ -37,7 +37,7 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "wss://wss.airehab.sbmi.uth.edu:8989",
+                server: "ws://52.54.75.79:8989",
                 success: function() {
                     console.log("Connected to Janus");
                     janusInstance.attach({
@@ -757,7 +757,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   });
-
   // Play or resume button for video and webcam
   resumeBtnElem.addEventListener("click", () => {
     if (!isFirstPlay && !webcamElem.paused && WOPose.isLoop) return;
@@ -774,55 +773,51 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     WOTimer.resume();
     WOPose.isLoop = true;
-
-    if (!janusVideoRoomHandle) {
-      console.error("Janus VideoRoom handle not available.");
-      return;
-  }
-
-  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-  .then(stream => {
-      // Display the local video stream on a video element in the webpage
-
-      /* webcamBox.play(); */
-
-      janusVideoRoomHandle.createOffer({
-          media: { audioSend: true, videoSend: true },
-          stream: stream,
-          success: function(jsep) {
-              const publish = {
-                  request: "publish",
-                  audio: true,
-                  video: true
-              };
-              janusVideoRoomHandle.send({
-                  message: publish,
-                  jsep: jsep
-              });
-          },
-          error: function(error) {
-              console.error("WebRTC error:", error);
-          }
-      });
-  })
-  .catch(error => {
-      console.error('Could not get user media', error);
-  });
-
-  janusVideoRoomHandle.onmessage = function(msg, jsep) {
-      if(jsep) {
-          janusVideoRoomHandle.handleRemoteJsep({ jsep: jsep });
-      }
-  };
-
-  if (!isWebcamSecPlay && firstPlay && !WOPose.isVideoMode) {
+    webcamElem.play().then(() => {
+      if (!isWebcamSecPlay && firstPlay && !WOPose.isVideoMode) {
         console.log("It run?");
         isWebcamSecPlay = true;
         // Return to stop redraw again (first play)
         return;
       }
-      
-  WOPose.drawPose();
+      WOPose.drawPose();
+    });
+
+    if (!janusVideoRoomHandle) {
+      console.error("Janus VideoRoom handle not available.");
+      return;
+    } 
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+        janusVideoRoomHandle.createOffer({
+            media: { audioSend: true, videoSend: true },
+            stream: stream,
+            success: function(jsep) {
+                const publish = {
+                    request: "publish",
+                    audio: true,
+                    video: true
+                };
+                janusVideoRoomHandle.send({
+                    message: publish,
+                    jsep: jsep
+                });
+            },
+            error: function(error) {
+                console.error("WebRTC error:", error);
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Could not get user media', error);
+    });
+
+    janusVideoRoomHandle.onmessage = function(msg, jsep) {
+        if(jsep) {
+            janusVideoRoomHandle.handleRemoteJsep({ jsep: jsep });
+        }
+    };
   });
 
   uploadVideoBtnElem.addEventListener("change", (event) => {

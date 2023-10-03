@@ -9,12 +9,12 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/template.html",
+      template: "./src/template-main.html",
       filename: "main.html",
       chunks: ['main']  // Include only the 'main' chunk
     }),
     new HtmlWebpackPlugin({
-      template: "./src/template2.html",
+      template: "./src/template-index.html",
       filename: "index.html",
       chunks: ['index']  // Include only the 'index' chunk
     }),

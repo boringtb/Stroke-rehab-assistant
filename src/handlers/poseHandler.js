@@ -6,6 +6,8 @@ import DatasetHandler from "./datasetHandler";
 import ClassifierHandler from "./classifierHandler";
 import CounterHandler from "./counterHandler";
 import WebcamHandler from "./webcamHandler";
+import { abs } from "@tensorflow/tfjs-core";
+const lodash = require('lodash');
 
 export default class PoseHandler {
   constructor(webcamElem, cnvPoseElem) {
@@ -43,11 +45,12 @@ export default class PoseHandler {
     this.estimationConfig = {};
 
     // Skeleton config
-    this.tresholdPoints = 0.3;
+    this.thresholdPoints = 0.5;
     this.lines = {
       0: [
         [0, 1],
         [0, 2],
+        // [0, 17],
       ],
       1: [[1, 3]],
       2: [[2, 4]],
@@ -55,12 +58,14 @@ export default class PoseHandler {
       4: [],
       5: [
         [5, 7],
-        [5, 6],
+        // [5, 6],
         [5, 11],
+        [5, 17],
       ],
       6: [
         [6, 8],
         [6, 12],
+        [6, 17],
       ],
       7: [[7, 9]],
       8: [[8, 10]],
@@ -75,6 +80,7 @@ export default class PoseHandler {
       14: [[14, 16]],
       15: [],
       16: [],
+      17: [],
     };
     // Counter handler
     this.counter = new CounterHandler(this.ctxPose);
@@ -115,12 +121,14 @@ export default class PoseHandler {
     // Draw Angle:
     this.ctxPose.save();
     this.ctxPose.beginPath();
+    
     // For handle flipping (horizontal)
     // eslint-disable-next-line no-underscore-dangle
     if (this.camHandler._facingMode === "user") {
       this.ctxPose.translate(this.cnvPoseElem.width, 0);
       this.ctxPose.scale(-1, 1);
     }
+    
     // For handle scale when change resolution of screen
     if (this.scaler) {
       this.ctxPose.scale(this.scaler.w, this.scaler.h);
@@ -139,11 +147,11 @@ export default class PoseHandler {
     const xyPoints = [];
     keypoints.forEach((p, i) => {
       xyPoints.push(p.x, p.y);
-      if (p.score > this.tresholdPoints) {
+      if (p.score > this.thresholdPoints) {
         this.ctxPose.moveTo(p.x, p.y);
         this.ctxPose.arc(p.x, p.y, 5, 0, 2 * Math.PI);
         this.lines[i].forEach((l) => {
-          if (keypoints[l[1]].score > this.tresholdPoints) {
+          if (keypoints[l[1]].score > this.thresholdPoints) {
             this.ctxPose.moveTo(p.x, p.y);
             this.ctxPose.lineTo(keypoints[l[1]].x, keypoints[l[1]].y);
           }
@@ -156,20 +164,63 @@ export default class PoseHandler {
     }
     this.ctxPose.stroke();
     this.ctxPose.fill();
+    this.ctxPose.restore();
+
     this.ctxPose.strokeStyle = "white";
     // Show number of angle in here, to overdraw previous skeleton & angles
+    if (!this.counter.listAngles) return xyPoints;
     this.counter.listAngles.forEach((dataAngle) => {
-      this.ctxPose.strokeText(`${dataAngle[0]}°`, dataAngle[1], dataAngle[2]);
+      if (this.camHandler._facingMode === "user") {
+        dataAngle[1] = dataAngle[1] * 1.15;
+        dataAngle[2] = dataAngle[2] * 1.1;
+        dataAngle[1] = 640 - dataAngle[1];
+      }
+      if (this.scaler) {
+        dataAngle[1] = dataAngle[1] * this.scaler.w;
+        dataAngle[2] = dataAngle[2] * this.scaler.h;
+      }
+      this.ctxPose.font = "bold 18px Arial";
+      this.ctxPose.fillStyle = "white";
+      this.ctxPose.fillText(`${dataAngle[0]}°`, dataAngle[1] + 5, dataAngle[2]);
+      this.ctxPose.strokeText(`${dataAngle[0]}°`, dataAngle[1] + 5, dataAngle[2]);
     });
     this.counter.listAngles = [];
-    this.ctxPose.restore();
     return xyPoints;
+  };
+
+  FTV_threshold = 0.5;
+  // Adding position of first thoracic vertebrae to the pose array
+  AddFTV = (pose) => {
+    let pose_expand = lodash.cloneDeep(pose);
+    if (pose && pose.length !== 0 && pose[0].keypoints[5].score > this.FTV_threshold 
+      && pose[0].keypoints[6].score > this.FTV_threshold) {
+        pose_expand[0].keypoints[17] = {
+        x: (pose[0].keypoints[5].x + pose[0].keypoints[6].x) / 2,
+        y: ((pose[0].keypoints[5].y + pose[0].keypoints[6].y) / 2 * 5 + pose[0].keypoints[0].y) / 6,
+        score: 1,
+        name: "FTV",
+      };
+    }
+    else {
+      pose_expand[0].keypoints[17] = {
+        x: 0,
+        y: 0,
+        score: 0,
+        name: "FTV",
+      };
+    }
+    return pose_expand;
   };
 
   drawPose = () => {
     this.getPose().then((pose) => {
       if (pose && pose.length !== 0) {
-        const xyPoints = this.drawSkeleton(pose[0].keypoints);
+        const pose_expand = this.AddFTV(pose);
+        const xyPoints_Expand = this.drawSkeleton(pose_expand[0].keypoints);
+        const xyPoints = [];
+        pose[0].keypoints.forEach((p, i) => {
+          xyPoints.push(p.x, p.y);
+        });
         if (
           xyPoints &&
           this.isClassify &&
