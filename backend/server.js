@@ -11,10 +11,12 @@ const PORT = 3000;
 const https = require('https');
 const fs = require('fs');
 
+const httpdata = fs.readFileSync('httpsOptions.json','utf8');
+const httppath = JSON.parse(httpdata);
 const httpsOptions = {
-  key: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.key"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/airehab.sbmi.uth.edu/airehab.sbmi.uth.edu_2023.crt")
-};
+        key: fs.readFileSync(httppath.key),
+        cert: fs.readFileSync(httppath.cert)
+}
 
 https.createServer(httpsOptions, app).listen(PORT, () => {
   console.log("HTTPS server running on port 3000");
@@ -129,12 +131,12 @@ app.get('/api/homeworkouts', (req, res) => {
       {
       "name": "Chest-press",
       "description": "Chest-press description two lines two lines Chest-press description two lines",
-      "videoURL" : "https://airehab.sbmi.uth.edu/api/example_videos/Chest-press.mp4"
+      "videoURL" : "https://airehab.sbmi.uth.edu:3000/api/example_videos/Chest-press.mp4"
       },
       {
       "name": "Eccentic-sits",
-      "description": "Chest-press description two lines two lines Chest-press description two lines",
-      "videoURL" : "https://airehab.sbmi.uth.edu/api/example_videos/Eccentic-Sits.mp4"
+      "description": "Start standing, slowly sit using leg muscles. Control descent, ensuring smooth movement down, and then go up",
+      "videoURL" : "https://airehab.sbmi.uth.edu:3000/api/example_videos/Eccentic-Sits.mp4"
       },
       {
       "name": "Elbow-Flexion-Extension",
@@ -178,7 +180,7 @@ app.get('/api/homeworkouts', (req, res) => {
 
 app.post('/api/example_videos/:exercise_name', (req, res) => {
   const exerciseName = req.params.exercise_name;
-  const videoPath = `/var/www/html/example_videos/${exerciseName}.mp4`;  // Use backticks for string interpolation
+  const videoPath = `/var/www/html/example_videos/${exerciseName}`;  // Use backticks for string interpolation
 
   // Set CORS headers
   res.header('Access-Control-Allow-Origin', '*');  // Allow all origins (consider using a specific domain for better security)
@@ -190,7 +192,7 @@ app.post('/api/example_videos/:exercise_name', (req, res) => {
 
 app.get('/api/example_videos/:exercise_name', (req, res) => {
   const exerciseName = req.params.exercise_name;
-  const videoPath = `/var/www/html/example_videos/${exerciseName}.mp4`;  // Use backticks for string interpolation
+  const videoPath = `/var/www/html/example_videos/${exerciseName}`;  // Use backticks for string interpolation
 
   // Set CORS headers
   res.header('Access-Control-Allow-Origin', '*');  // Allow all origins (consider using a specific domain for better security)
