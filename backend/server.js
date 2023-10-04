@@ -11,7 +11,7 @@ const PORT = 3000;
 const https = require('https');
 const fs = require('fs');
 
-const httpdata = fs.readFileSync('httpsOptions.json','utf8');
+const httpdata = fs.readFileSync('/home/ubuntu/httpsOptions.json','utf8');
 const httppath = JSON.parse(httpdata);
 const httpsOptions = {
         key: fs.readFileSync(httppath.key),

@@ -173,7 +173,7 @@ export default class PoseHandler {
       if (this.camHandler._facingMode === "user") {
         dataAngle[1] = dataAngle[1] * 1.15;
         dataAngle[2] = dataAngle[2] * 1.1;
-        dataAngle[1] = 640 - dataAngle[1];
+        dataAngle[1] = 360 - dataAngle[1];
       }
       if (this.scaler) {
         dataAngle[1] = dataAngle[1] * this.scaler.w;

@@ -10,7 +10,7 @@
   },
   "rulesCountConfig": {
     "nameWorkout": "Eccentic-sits",
-    "nameStage": ["Up", "Down"],
+    "nameStage": ["Down", "Up"],
     "pathImageStage": ["./img/iconmonstr-caret-down-circle-filled-64.png", "./img/iconmonstr-caret-up-circle-filled-64.png"],
     "pathAudioStage": ["./audio/go-down-from-google-translate.webm", "./audio/go-up-from-google-translate.webm"],
     "anglePoint": {
