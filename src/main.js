@@ -37,7 +37,7 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "ws://52.54.75.79:8989",
+                server: "ws://52.54.75.79:8188",
                 success: function() {
                     console.log("Connected to Janus");
                     janusInstance.attach({

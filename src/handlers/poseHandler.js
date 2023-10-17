@@ -171,9 +171,11 @@ export default class PoseHandler {
     if (!this.counter.listAngles) return xyPoints;
     this.counter.listAngles.forEach((dataAngle) => {
       if (this.camHandler._facingMode === "user") {
-        dataAngle[1] = dataAngle[1] * 1.15;
+        dataAngle[1] = dataAngle[1] * 1.1;
         dataAngle[2] = dataAngle[2] * 1.1;
+        console.log("before mirror", this.camHandler._webcamElement.width, dataAngle[1])
         dataAngle[1] = 360 - dataAngle[1];
+        console.log("after mirror", this.camHandler._webcamElement.width, dataAngle[1])
       }
       if (this.scaler) {
         dataAngle[1] = dataAngle[1] * this.scaler.w;

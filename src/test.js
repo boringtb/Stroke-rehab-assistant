@@ -20,7 +20,7 @@ async function postExerciseSelection(workoutName, duration) {
 
   if (response.status === 200) {
     // Update the URL to move to the next view
-    const newURL = `${window.location.protocol}//${window.location.host}/main/player?nameWorkout=${workoutName}&duration=${dur}`;
+    const newURL = `${window.location.protocol}//${window.location.host}/test/player?nameWorkout=${workoutName}&duration=${dur}`;
     window.history.pushState({ path: newURL }, '', newURL);
     
     // Do additional logic here to handle the next view
@@ -37,7 +37,7 @@ if (Janus && typeof Janus.init === 'function') {
                 return;
             }
             janusInstance = new Janus({
-                server: "wss://wss.airehab.sbmi.uth.edu:8989",
+                server: "wss://airehab.sbmi.uth.edu:8989",
                 success: function() {
                     console.log("Connected to Janus");
                     janusInstance.attach({
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           interval: 1000,
           duration: WOPose.isVideoMode
             ? Math.floor(webcamElem.duration)
-            : 60 * +WOSettings.DBWOSettings.currDuration.split(" ")[0],
+            : 60 * + WOSettings.DBWOSettings.currDuration.split(" ")[0],
           type: "DEC",
           firstDelayDuration: WOPose.isVideoMode ? 0 : 3,
         });

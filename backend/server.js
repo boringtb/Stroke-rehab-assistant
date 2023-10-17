@@ -6,6 +6,7 @@ const uuid = require('uuid');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
+const db = require('./database/database');
 
 const PORT = 3000;
 const https = require('https');
@@ -22,7 +23,6 @@ https.createServer(httpsOptions, app).listen(PORT, () => {
   console.log("HTTPS server running on port 3000");
 });
 
-
 // Add this after initializing your app and before any routes
 app.use(cors());
 app.use(bodyParser.json());
@@ -30,15 +30,43 @@ app.use(cookieParser());
 
 // Middleware to assign or read a unique user ID
 app.use((req, res, next) => {
-    if (!req.cookies.userId) {
-      const userId = uuid.v4(); // Generate a new UUID
-      res.cookie('userId', userId); // Store it in a cookie
+  let userId = req.cookies.userId;
+  if (!userId) {
+      userId = uuid.v4();  // Generate a new UUID
+
+      // Check if this userID exists in the users table
+      const checkUserSQL = "SELECT userId FROM users WHERE userId = ?";
+      db.get(checkUserSQL, [userId], (err, row) => {
+          if (err) {
+              console.error("Error checking user in database:", err);
+              return next(err);
+          }
+
+          // If user doesn't exist, insert into the users table
+          if (!row) {
+              const insertUserSQL = "INSERT INTO users (userId) VALUES (?)";
+              db.run(insertUserSQL, [userId], (err) => {
+                  if (err) {
+                      console.error("Error inserting user into database:", err);
+                      return next(err);
+                  }
+                  
+                  // Store the userID in a cookie
+                  res.cookie('userId', userId);
+                  req.userId = userId;
+                  next();
+              });
+          } else {
+              // User exists, just set the userID in the request
+              req.userId = userId;
+              next();
+          }
+      });
+  } else {
       req.userId = userId;
-    } else {
-      req.userId = req.cookies.userId;
-    }
-    next();
-  });
+      next();
+  }
+});
 
 // GET endpoint to fetch exercise summary
 app.get('/api/summary/:userId', (req, res) => {
@@ -49,33 +77,32 @@ app.get('/api/summary/:userId', (req, res) => {
     } else {
       res.status(404).json({ message: 'Summary not found' });
     }
-  });
+});
 
-  function generateUniqueSerial() {
+function generateUniqueSerial() {
     const timestamp = new Date().getTime();
     const randomNum = Math.floor(Math.random() * 1000);
     return `${timestamp}-${randomNum}`;
-  }
+}
   
-
 // POST endpoint to store exercise summary
 app.post('/api/summary', (req, res) => {
-    const summary = req.body;
-    // Generate a unique serial number
-    const serialNumber = generateUniqueSerial();
+  const summary = req.body;
+  const userId = req.userId;  // Retrieve the userId from the request object
+  const serialNumber = generateUniqueSerial();
 
-    // Insert the summary and serial number into the SQLite database
-    const insertSQL = `INSERT INTO records (serial, summary) VALUES (?, ?)`;
-    db.run(insertSQL, [serialNumber, JSON.stringify(summary)], function(err) {
-        if (err) {
-            console.error("Error storing summary in database:", err);
-            return res.status(500).json({ message: 'Error storing summary' });
-        }
-        
-        // Send back the serial number in the response
-        res.json({ message: 'Summary saved', serialNumber, summary});
-      });
+  // Insert the userId, serial number, and summary into the SQLite database
+  const insertSQL = `INSERT INTO records (userId, serial, summary) VALUES (?, ?, ?)`;
+  db.run(insertSQL, [userId, serialNumber, JSON.stringify(summary)], function(err) {
+      if (err) {
+          console.error("Error storing summary in database:", err);
+          return res.status(500).json({ message: 'Error storing summary' });
+      }
+      
+      // Send back the serial number in the response
+      res.json({ message: 'Summary saved', serialNumber, summary });
   });
+});
 
 app.post('/api/jsonjump', (req, res) => {
   const nameWorkout = req.body.nameWorkout;
@@ -125,55 +152,55 @@ app.get('/api/homeworkouts', (req, res) => {
     "workouts": [
       {
       "name": "Shoulder-Abduction",
-      "description": "Shoulder-Abduction description two lines Shoulder-Abduction description two lines",
-      "videoURL" : null
+      "description": "Start with your arms straight by your side. Lift your arm out to the side while keeping your elbow straight. Repeat.",
+      "videoURL" : "https://airehab.sbmi.uth.edu:3000/api/example_videos/shabd_standing.mp4"
       },
       {
       "name": "Chest-press",
-      "description": "Chest-press description two lines two lines Chest-press description two lines",
+      "description": "Start with your arms bent and your hands in front of your chest. Push your arms forward, straightening your elbows, and then slowly return to the starting position.",
       "videoURL" : "https://airehab.sbmi.uth.edu:3000/api/example_videos/Chest-press.mp4"
       },
       {
       "name": "Eccentic-sits",
-      "description": "Start standing, slowly sit using leg muscles. Control descent, ensuring smooth movement down, and then go up",
+      "description": "Start sitting in a chair with your feet flat on the floor. Stand up and then slowly sit back down.",
       "videoURL" : "https://airehab.sbmi.uth.edu:3000/api/example_videos/Eccentic-Sits.mp4"
       },
       {
       "name": "Elbow-Flexion-Extension",
-      "description": "Elbow-Flexion-Extension description two lines two lines Elbow-Flexion-Extension description two lines",
-      "videoURL" : null
+      "description": "Start with your arm resting beside you with your palm facing up. Bend your elbow and bring your hand towards your shoulder. Then straighten your elbow and return to the starting position.",
+      "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
       },
       {
       "name": "Marching",
-      "description": "Marching description two lines two lines Marching description two lines",
+      "description": "Start in standing. Lift one knee up towards your chest and then lower it back down. Repeat with the other leg.",
       "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
       },
       {
       "name": "Overhead-press",
-      "description": "Overhead-press description two lines two lines Overhead-press description two lines",
+      "description": "Start with your arms out to the side and your elbows bent. Lift your arms up overhead and then slowly return to the starting position.",
       "videoURL" : "https://www.uth.edu/index/hero-video.mp4"
       }
       ],
       "workoutDurations": [
       {
-      "timeInt": 1,
-      "timeUnit": "minutes",
-      "timeUnitShort": "min"
+      "timeInt": 30,
+      "timeUnit": "seconds",
+      "timeUnitShort": "sec"
       },
       {
-      "timeInt": 3,
-      "timeUnit": "minutes",
-      "timeUnitShort": "min"
+      "timeInt": 60,
+      "timeUnit": "seconds",
+      "timeUnitShort": "sec"
       },
       {
-      "timeInt": 5,
-      "timeUnit": "minutes",
-      "timeUnitShort": "min"
+      "timeInt": 90,
+      "timeUnit": "seconds",
+      "timeUnitShort": "sec"
       },
       {
-      "timeInt": 7,
-      "timeUnit": "minutes",
-      "timeUnitShort": "min"
+      "timeInt": 120,
+      "timeUnit": "seconds",
+      "timeUnitShort": "sec"
       }]
   }); // This route is for handling any other unrecognized requests
 })

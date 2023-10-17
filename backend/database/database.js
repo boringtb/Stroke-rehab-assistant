@@ -8,17 +8,35 @@ const db = new sqlite3.Database('./backend/database/exerciseDB.sqlite', (err) =>
     console.log('Connected to the SQLite database.');
 });
 
-// Create a new table to store serial numbers and timestamps
-const createTableSQL = `
-CREATE TABLE IF NOT EXISTS records (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    serial TEXT NOT NULL,
-    timestamp TEXT NOT NULL
+// Create the 'users' table to store unique user IDs
+const createUsersTableSQL = `
+CREATE TABLE IF NOT EXISTS users (
+    userId TEXT PRIMARY KEY
 )`;
 
-db.run(createTableSQL, (err) => {
+db.run(createUsersTableSQL, (err) => {
     if (err) {
         return console.error(err.message);
     }
-    console.log('Table created or already exists.');
+    console.log('Users table created or already exists.');
 });
+
+// Modify the 'records' table to have a foreign key relationship with 'users'
+const createRecordsTableSQL = `
+CREATE TABLE IF NOT EXISTS records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId TEXT NOT NULL REFERENCES users(userId),
+    serial TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+)`;
+
+db.run(createRecordsTableSQL, (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Records table created or already exists.');
+});
+
+
+module.exports = db;
