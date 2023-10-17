@@ -13,7 +13,7 @@ let janusVideoRoomHandle;
 // Function to send a POST request to the server and get a response
 async function postExerciseSelection(workoutName, duration) {
   const dur = duration.split(" ")[0];
-  const response = await fetch(`https://airehab.sbmi.uth.edu:3000/api/${workoutName}/${dur}`, {
+  const response = await fetch(`https://airehab.sbmi.uth.edu:3000/api/workouts/${workoutName}/${dur}`, {
     method: 'POST'
   });
   const data = await response.json();

@@ -135,7 +135,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 // Add a GET API endpoint to provide exercise data
-app.post('/api/:workoutName/:duration', (req, res) => {
+app.post('/api/workouts/:workoutName/:duration', (req, res) => {
   const workoutName = req.params.workoutName;
   const duration = req.params.duration;
 
