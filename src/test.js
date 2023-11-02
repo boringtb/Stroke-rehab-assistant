@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           interval: 1000,
           duration: WOPose.isVideoMode
             ? Math.floor(webcamElem.duration)
-            : 60 * + WOSettings.DBWOSettings.currDuration.split(" ")[0],
+            : + WOSettings.DBWOSettings.currDuration.split(" ")[0],
           type: "DEC",
           firstDelayDuration: WOPose.isVideoMode ? 0 : 3,
         });
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       interval: 1000,
       duration: WOPose.isVideoMode
         ? Math.floor(webcamElem.duration)
-        : 60 * +WOSettings.DBWOSettings.currDuration.split(" ")[0],
+        : +WOSettings.DBWOSettings.currDuration.split(" ")[0],
       type: "DEC",
       firstDelayDuration: WOPose.isVideoMode ? 0 : 3,
     });
@@ -509,7 +509,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           interval: 1000,
           duration: WOPose.isVideoMode
             ? Math.floor(webcamElem.duration)
-            : 60 * +data.durationWO.value.split(" ")[0],
+            : +data.durationWO.value.split(" ")[0],
           type: "DEC",
           firstDelayDuration: WOPose.isVideoMode ? 0 : 3,
         });
@@ -785,15 +785,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     } 
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     .then(stream => {
         janusVideoRoomHandle.createOffer({
-            media: { audioSend: true, videoSend: true },
+            media: { audioSend: false, videoSend: true },
             stream: stream,
             success: function(jsep) {
                 const publish = {
                     request: "publish",
-                    audio: true,
+                    audio: false,
                     video: true
                 };
                 janusVideoRoomHandle.send({
@@ -868,7 +868,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           interval: 1000,
           duration: WOPose.isVideoMode
             ? Math.floor(webcamElem.duration)
-            : 60 * +WOSettings.DBWOSettings.currDuration.split(" ")[0],
+            : +WOSettings.DBWOSettings.currDuration.split(" ")[0],
           type: "DEC",
           firstDelayDuration: WOPose.isVideoMode ? 0 : 3,
         });

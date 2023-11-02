@@ -89,41 +89,12 @@
   </head>
   <body><a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <!-- global navigation bar-->
-    <div id="header"><div id="utilityNav">
-      <div class="grid-container clearfix">
-          <div class="grid-x float-right">
-              <nav id="nav" aria-label="Main menu">
-                  <ul class="toptier">
-                      <li class="active">
-                          <span style="font-size: calc(3pt + 100%); color: rgb(255, 255, 255);">MOBILE HEALTH</span> <a href="https://www.uth.edu/stroke-institute/" style="color: rgb(255, 255, 255);">UTHEALTH Institute for Stroke and Cerebrovascular Diseases  <i class="fi-home"></i></a>
-                      </li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/about/">About UTHealth</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/careers/">Careers</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/news/">News</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/calendar/">Events</a></li>
-                          <li class="show-for-large"><a href="https://www.uth.edu/index/a2z.htm">A-Z</a></li>
-                  </ul>
-              </nav>
-          </div>
-      </div>
-  </div>
-  <header class="container" style="max-width: 1140px;">
-      <nav role="heading" aria-level="1" class="navbar navbar-expand-lg navbar-light bg-white">
-          <div class="container-fluid">
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#actualNavbar" aria-controls="actualNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="actualNavbar">
-                  <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                      <li class="nav-item">
-                          <a class="nav-link fw-500" aria-current="page" href="/survey/" style="color: #000000;">English</a>
-                      </li>
-                  </ul>
-              </div>
-            </div>
-       </nav>
-  </header>
+    <script> 
+      $(function(){
+      $("#header").load("header.html"); 
+      $("#footer").load("footer.html"); 
+      });
+    </script> 
   
     <!-- Wrapper Choose Workout -->
     <h2
@@ -148,6 +119,7 @@
       >
         <div
           class="flex-1 flex flex-col overflow-y-auto h-full items-center w-full"
+          tabindex="0"
         >
           <h3 class="font-bold text-2xl my-3">Allow Camera Access</h3>
           <img
@@ -561,24 +533,24 @@
           </div>
           <div class="flex flex-col items-end">
             <div class="flex flex-row mb-2">
-              <div
+              <button
                 id="helpBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg mr-2"
               >
                 Help
-              </div>
-              <div
+              </button>
+              <button
                 id="scoresBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg mr-2"
               >
                 Scores
-              </div>
-              <div
+              </button>
+              <button
                 id="settingsBtn"
                 class="cursor-pointer hover:bg-gray-200 bg-white text-xl font-bold text-gray-700 py-1 px-3 rounded-lg"
               >
                 Settings
-              </div>
+              </button>
             </div>
             <div
               id="titleWOBox"

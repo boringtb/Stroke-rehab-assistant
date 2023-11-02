@@ -173,9 +173,7 @@ export default class PoseHandler {
       if (this.camHandler._facingMode === "user") {
         dataAngle[1] = dataAngle[1] * 1.1;
         dataAngle[2] = dataAngle[2] * 1.1;
-        console.log("before mirror", this.camHandler._webcamElement.width, dataAngle[1])
         dataAngle[1] = 360 - dataAngle[1];
-        console.log("after mirror", this.camHandler._webcamElement.width, dataAngle[1])
       }
       if (this.scaler) {
         dataAngle[1] = dataAngle[1] * this.scaler.w;
@@ -246,7 +244,7 @@ export default class PoseHandler {
       if (this.isClassify) {
         // Show counter
         if (this.additionalElem.countElem) {
-          this.additionalElem.countElem.innerText = this.counter.count;
+          this.additionalElem.countElem.innerText = this.counter.full_count;
         }
         // Show directionSign
         if (

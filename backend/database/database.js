@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 // Create a new database or open an existing one
-const db = new sqlite3.Database('./backend/database/exerciseDB.sqlite', (err) => {
+const db = new sqlite3.Database('/home/ubuntu/database/exerciseDB.sqlite', (err) => {
     if (err) {
         return console.error(err.message);
     }

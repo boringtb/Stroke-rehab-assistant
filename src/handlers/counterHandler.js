@@ -2,7 +2,10 @@ import AudioHandler from "./audioHandler";
 
 export default class CounterHandler {
   constructor(ctxPose) {
-    this.count = 0;
+    this.full_count = 0;
+    this.full_flag = 0;
+    this.partial_count = 0;
+    this.partial_flag = 0;
     this.rules = null;
     this.ctxPose = ctxPose;
     this.lastStage = {};
@@ -53,7 +56,7 @@ export default class CounterHandler {
   };
 
   resetCount = () => {
-    this.count = 0;
+    this.full_count = 0;
   };
 
   determineCurrStage = () => {
@@ -62,27 +65,38 @@ export default class CounterHandler {
       const sortObsStages = [...this.obsStages].sort((a, b) => b.sum - a.sum);
       const statusStage =
         sortObsStages[0].sum === this.sumObsPoints ? "FULL" : "PARTIAL";
+
       this.currStage = {
         statusStage,
         idStage: sortObsStages[0].idStage,
         nameStage: sortObsStages[0].nameStage,
       };
+      console.log("this.currStage", this.currStage,
+                  "statusStage", statusStage,
+                  "full_count", this.full_count,
+                  "full_flag", this.full_flag,
+                  "partial_count", this.partial_count,
+                  "partial_flag", this.partial_flag);
+      // full-satisfied at rest stage, achieved full-exercise -> count + 1
       if (
         statusStage === "FULL" &&
-        this.currStage.nameStage !== this.lastStage.nameStage &&
-        this.currStage.idStage === this.rules.nameStage.length - 1
+        this.currStage.nameStage === "Rest" &&
+        this.full_flag === 1
       ) {
-        this.count += 1;
+        this.full_count += 1;
         if (this.isPlayAudStage && this.audCount.isLoaded) {
           this.audCount.play();
         }
+        this.full_flag = 0;
+        this.partial_flag = 0;
       }
+      // full-satisfied at rest stage, achieved partial-exercise -> failed attempt + 1
       if (
         statusStage === "FULL" &&
-        sortObsStages[0].nameStage !== "None" &&
-        (Object.keys(this.lastStage).length === 0 ||
-          this.lastStage.nameStage !== sortObsStages[0].nameStage)
+        this.currStage.nameStage === "Rest" &&
+        (this.full_flag === 0 && this.partial_flag === 1)
       ) {
+        this.partial_count += 1;
         this.lastStage = {
           idStage: sortObsStages[0].idStage,
           nameStage: sortObsStages[0].nameStage,
@@ -95,6 +109,21 @@ export default class CounterHandler {
           idStage: nextIdStage,
           nameStage: this.rules.nameStage[nextIdStage],
         };
+        this.full_flag = 0;
+        this.partial_flag = 0;
+      }
+      if (
+        statusStage === "FULL" &&
+        this.currStage.nameStage === "Full" 
+      ) {
+        this.full_flag = 1;
+        this.partial_flag = 0;
+      }
+      if (
+        statusStage === "FULL" &&
+        this.currStage.nameStage === "Partial" 
+      ) {
+        this.partial_flag = 1;
       }
     }
   };

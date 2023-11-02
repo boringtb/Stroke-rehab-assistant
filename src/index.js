@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `
       : `
       <div class="flex-1 overflow-y-auto flex flex-col items-center w-full">
-          <h1 class="font-bold text-2xl mt-3 mb-5">
+          <h1 class="font-bold text-2xl mt-3 mb-5" aria-hidden="true">
             Stroke Rehab Assistant
           </h1>
         <div class="relative w-full flex flex-row justify-center items-center">
@@ -209,14 +209,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             alt="Ilustration of Workout"
             class="w-1/2"
           />
-          <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-black font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500">Need Help ?</div>
+          <div id="chooseHelpBtn" class="top-0 right-0 bg-yellow-500 text-black font-bold py-1 px-2 rounded-lg cursor-pointer hover:bg-amber-500" aria-hidden="true">Need Help ?</div>
         </div>
-        <div class="mt-5 mb-3">What exercise do you want to practice?</div>
+        <div class="mt-5 mb-3" aria-hidden="true">What exercise do you want to practice?</div>
       `;
 
-    data.nameWorkout.forEach((nameWO, idx) => {
+    data.nameWorkout.forEach((nameWO, idx) => { 
       if (idx === 0) {
-        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full" role="group" aria-labelledby="exercise-name">`;
+        htmlChooseWO += `
+        <div>
+          <fieldset class="grid grid-cols-2 gap-3 w-full" role="group" aria-labelledby="WOnames">
+        `;
       }
       htmlChooseWO += `
         <label
@@ -230,24 +233,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             name="${isSettings ? "settingsNameWO" : "chooseNameWO"}"
             class="w-4 h-4 text-yellow-600"
             required
+            aria-label="Workout Name"
           />
-          <span class="w-full py-4 ml-2 text-sm font-medium text-black"
+          <span class="w-full py-4 ml-2 text-sm font-medium text-black" aria-hidden="true"
             >${nameWO}</span
           >
         </label>
         `;
       if (idx === data.nameWorkout.length - 1) {
-        htmlChooseWO += `</fieldset>`;
+        htmlChooseWO += `
+          </fieldset>
+        </div>`;
       }
     });
 
     htmlChooseWO += `<div class="${
       isSettings ? "mt-3" : "mt-5"
-    } mb-3">How long?</div>`;
+    } mb-3" aria-hidden="true">How long?</div>`;
 
     data.duration.forEach((duration, idx) => {
       if (idx === 0) {
-        htmlChooseWO += `<fieldset class="grid grid-cols-2 gap-3 w-full" role="group" aria-labelledby="exercise-duration">`;
+        htmlChooseWO += `
+        <div>
+          <fieldset class="grid grid-cols-2 gap-3 w-full">`;
       }
       htmlChooseWO += `
         <label
@@ -265,17 +273,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             name="${isSettings ? "settingsDurationWO" : "chooseDurationWO"}"
             class="w-4 h-4 text-yellow-600"
             required
+            aria-label="Workout Duration"
           />
-          <span class="w-full py-4 ml-2 text-sm font-medium text-black"
+          <span class="w-full py-4 ml-2 text-sm font-medium text-black" aria-hidden="true"
             >${duration}</span
           >
         </label>
         `;
       if (idx === data.duration.length - 1) {
-        htmlChooseWO += `</fieldset>`;
+        htmlChooseWO += `
+            </fieldset>
+          </div>
+        `;
       }
     });
 
+
+    // aria-hidden="true"
+    // disabled 
     htmlChooseWO += isSettings
       ? ""
       : `
@@ -284,6 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           id="submitWOBtn"
           type="submit"
           class="w-full bg-yellow-500 text-black py-2 text-xl font-bold rounded-lg mb-2 mt-5 hover:bg-amber-600"
+          
         >
           Next
         </button>
